@@ -1,9 +1,14 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from utils.constant import FEMALE, GENDER
+from utils.constant import (
+    FEMALE,
+    GENDER,
+    BUISNESS_TYPE,
+    B2B_COMPANIES
+)
 
 
 class Customer(AbstractUser):
@@ -33,6 +38,15 @@ class Customer(AbstractUser):
         validators=[phone_regex], max_length=17, blank=True
     )  # Validators should be a list
     age = models.IntegerField(default=None, null=True, blank=True)
+    manager = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="staff_members",
+        default=None,
+
+    )
 
     # def get_age(self):
     #     """Count the Customer's age from birth_date"""
@@ -54,3 +68,33 @@ class Customer(AbstractUser):
         if Customer.objects.filter(email=self.email):
             return True
         return False
+
+
+class Business(models.Model):
+    phone_regex = RegexValidator(
+        regex=r"^\+?1?\d{9,15}$",
+        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits "
+                "allowed.",
+    )
+    business_customer = models.ForeignKey(
+        Customer,
+        on_delete=models.SET_NULL,
+        default=None,
+        related_name="company",
+        blank=True,
+        null=True,
+    )
+    company_name = models.CharField(max_length=20)
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    company_email = models.EmailField(_("email address"), blank=True)
+    Nature_of_business = models.CharField(
+        default=B2B_COMPANIES, choices=BUISNESS_TYPE, max_length=15
+    )
+    Year_of_Establishment = models.DateField()
+    product_category = models.CharField(max_length=10)
+    revenue = models.DecimalField(decimal_places=3, max_digits=20)
+    offline_channel = models.BooleanField()
+    company_profile = models.TextField()
+    portfolio = models.IntegerField()
+
+

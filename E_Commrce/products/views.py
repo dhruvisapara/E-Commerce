@@ -7,8 +7,18 @@ from products.serializer import ProductSerializer
 
 
 class ProductViewSet(ModelViewSet):
+    queryset = Products.objects.all()
     serializer_class = ProductSerializer
     authentication_classes = [JWTAuthentication]
-    queryset = Products.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filter_class = BrandFilter
+
+    def get_serializer(self, *args, **kwargs):
+        if "data" in kwargs:
+
+            data = kwargs["data"]
+
+            if isinstance(data, list):
+                kwargs["many"] = True
+
+        return super(ProductViewSet, self).get_serializer(*args, **kwargs)

@@ -1,4 +1,3 @@
-from decimal import Decimal
 from django.db import models
 from customer.models import Customer
 from products.models import Products
@@ -12,19 +11,34 @@ class Cart(ActivatorModel):
     text_total = models.DecimalField(default=0.00, max_digits=5, decimal_places=3)
     text_percentage = models.DecimalField(default=0.00, max_digits=5, decimal_places=3)
 
-    # def __str__(self):
-    #     return str(self.id)
+    def __str__(self):
+        return str(self.id)
+
+    @property
+    def get_total_cost(self):
+        total_cost = sum(item.get_total_price() for item in self.carts.all())
+        return total_cost
+
+    @property
+    def get_total_items(self):
+        total_item = sum(item.get_quantity() for item in self.carts.all())
+        return total_item
+
+    def save(self, *args, **kwargs):
+        instance = super(Cart, self).save(*args, **kwargs)
+        self.total = self.get_total_cost
+        self.number_of_items = self.get_total_items
+        return instance
 
 
 class CartItem(models.Model):
     product = models.ForeignKey(
-        Products, on_delete=models.CASCADE, default=None, related_name="items"
+        Products, on_delete=models.CASCADE, null=True, related_name="items"
     )
     quantity = models.PositiveIntegerField()
     cart_item = models.ForeignKey(
         Cart,
         on_delete=models.CASCADE,
-        default=None,
         null=True,
         blank=True,
         related_name="carts",
@@ -33,6 +47,17 @@ class CartItem(models.Model):
     def get_total_price(self):
         return self.product.price * self.quantity
 
+    def get_quantity(self):
+        return self.quantity
+
+    # def update_total(self):
+    #     cart_total = self.cart_item.total
+    #     shipping_total = self.cart_item.text_total
+    #     new_total = math.fsum([shipping_total, cart_total])
+    #     formatted_total = format(new_total, '.2f')
+    #     self.total = formatted_total
+    #     self.save()
+    #     return new_total
 
     # def get_cart_deal_total(self):
     #     orderitem = self.cart_item.number_of_items()

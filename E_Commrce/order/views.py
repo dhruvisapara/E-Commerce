@@ -1,14 +1,16 @@
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from order.models import Order
 from order.serializer import OrderSerializer
+from utils.constant import PROCESSED
 
 
-class OrderView(ModelViewSet):
-    @action(detail=True, methods=["post"])
-    def product(self, request, pk):
-        """For adding products in particular category."""
-        serializer = OrderSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(product_id=pk, user=request.user)
-        return Response(serializer.data)
+class OrderViewSet(ModelViewSet):
+    serializer_class = OrderSerializer
+    # queryset = Order.objects.filter(status=PROCESSED)
+    queryset= Order.objects.all()
+    authentication_classes = [JWTAuthentication]
+
+
+
