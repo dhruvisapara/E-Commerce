@@ -24,7 +24,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ("id", "name", "description", "parent")
+        fields = ("id", "categories", "description", "parent")
 
 
 class CategorySerializer(ModelSerializer):
@@ -33,14 +33,16 @@ class CategorySerializer(ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ("id", "name", "sub_categories", "description")
+        fields = ("id", "categories", "sub_categories", "description","user")
 
     def create(self, validated_data):
 
         sub_categories = validated_data.pop("sub_categories")
+        validated_data["user"] = self.context["request"].user
         parent = super(CategorySerializer, self).create(validated_data)
 
         for sub_category in sub_categories:
+
             sub_category["parent"] = parent.id
             sub_cat_serializer = SubCategorySerializer(data=sub_category)
             sub_cat_serializer.is_valid(raise_exception=True)

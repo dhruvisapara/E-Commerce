@@ -9,12 +9,13 @@ logger = get_task_logger(__name__)
 
 @app.shared_task()
 def order_conformation():
-
-    user = Order.objects.all().last()
+    user = Order.objects.filter().last()
     mail_subject = " Order Confirmation"
-    message = "Congratulations !!!! {} your order placed successfully.It's time for double  celebration you won ," \
-              "congratulations you won {} points from this Order".format(
-        user.user.username, user.points_gained
+    message = (
+        "Congratulations !!!! {} your order placed successfully.It's time for double  celebration you won ,"
+        "congratulations you won {} points from this Order".format(
+            user.user.username, user.points_gained
+        )
     )
 
     to_email = user.user.email

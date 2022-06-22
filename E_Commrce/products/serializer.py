@@ -25,6 +25,8 @@ class ProductSerializer(ModelSerializer):
     id = serializers.IntegerField(required=False)
     brand = serializers.CharField(read_only=True)
 
+
+
     class Meta:
         model = Products
         list_serializer_class = ProductListSerializer
@@ -38,7 +40,10 @@ class ProductSerializer(ModelSerializer):
             "new_price",
             "is_bestseller",
             "is_featured",
+            "user"
         ]
+
+
     # def validate_name(self, value):
     #     """
     #     Check that user's registered company name and this name will same

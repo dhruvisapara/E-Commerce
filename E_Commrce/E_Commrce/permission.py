@@ -9,7 +9,7 @@ class StaffPermission(BasePermission):
         return request.user and request.user.is_staff
 
 
-class User_cart_permission(BasePermission):
+class Modification_permission(BasePermission):
     """only user can update or delete their cart."""
 
     def has_object_permission(self, request, view, obj):
@@ -18,8 +18,15 @@ class User_cart_permission(BasePermission):
         return obj.user == request.user
 
 
+# class Category_modification_permission(BasePermission):
+#     """category will modify by that person who added that category"""
+#     def has_object_permission(self, request, view, obj):
+#         if request.method in permissions.SAFE_METHODS:
+#             return True
+#         return obj.user == request.user
+
 class User_business_permission(BasePermission):
-    """only business user can update or delete company products"""
+    """Registered business user can only modify the company details."""
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:

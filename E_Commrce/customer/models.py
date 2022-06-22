@@ -91,10 +91,10 @@ class Business(models.Model):
         default=B2B_COMPANIES, choices=BUISNESS_TYPE, max_length=15
     )
     Year_of_Establishment = models.DateField()
+    number_of_employees=models.IntegerField(default=4)
     product_category = models.CharField(max_length=10)
     revenue = models.DecimalField(decimal_places=3, max_digits=20)
     offline_channel = models.BooleanField()
     company_profile = models.TextField()
     portfolio = models.IntegerField()
-
-
+    objects = models.Manager()

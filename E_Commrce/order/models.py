@@ -15,7 +15,7 @@ class Order(ActivatorModel):
         related_name="cart_order",
         null=True,
     )
-    product=models.ForeignKey(Products,on_delete=models.CASCADE,null=True,blank=True)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField(choices=ORDER_STATUSES, default=SUBMITTED)
     price = models.DecimalField(decimal_places=3, max_digits=10)
     date_added = models.DateTimeField(auto_now_add=True)

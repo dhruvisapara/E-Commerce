@@ -1,15 +1,14 @@
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.permissions import AllowAny,IsAdminUser
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from E_Commrce.permission import  User_business_permission
+from E_Commrce.permission import User_business_permission
 from customer.models import Customer, Business
-from customer.serializer import CustomerSerializer, BusinessUserSerializer,StaffMembersSerializer
+from customer.serializer import CustomerSerializer, BusinessUserSerializer, StaffMembersSerializer
 from customer.task import send_email_task
-
 
 
 class Registration(ViewSet, CreateModelMixin):
@@ -33,8 +32,7 @@ class Userlist(ListAPIView):
     serializer_class = CustomerSerializer
 
     def get_queryset(self):
-        user = self.queryset.filter(username=self.request.user.username)
-        return user
+        return self.queryset.filter(username=self.request.user.username)
 
 
 class BusinessViewSet(ModelViewSet):
@@ -45,9 +43,24 @@ class BusinessViewSet(ModelViewSet):
         User_business_permission
     ]
 
+    def get_queryset(self):
+        return self.queryset.filter(business_customer=self.request.user.id)
+
 
 class RegisterStaffViewSet(ModelViewSet):
     authentication_classes = [JWTAuthentication]
     serializer_class = StaffMembersSerializer
     queryset = Customer.objects.all()
-    permission_classes = [IsAdminUser,]
+    permission_classes = [IsAdminUser, ]
+
+    def get_queryset(self):
+        return self.queryset.filter(manager=self.request.user.id)
+
+
+class StaffProfileViewSet(ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(manager=self.request.user.id)
