@@ -1,11 +1,11 @@
 from django.db import models
-from customer.models import Customer
+from E_Commrce.settings import AUTH_USER_MODEL
 from products.models import Products
 from django_extensions.db.models import ActivatorModel
 
 
 class Cart(ActivatorModel):
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE, default=None)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, default=None)
     number_of_items = models.PositiveIntegerField(default=0)
     total = models.DecimalField(default=0.00, max_digits=5, decimal_places=3)
     text_total = models.DecimalField(default=0.00, max_digits=5, decimal_places=3)

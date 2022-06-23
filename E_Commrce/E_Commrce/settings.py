@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'products',
     'cart',
     'order',
+    'address',
     'django_filters',
     'rest_framework_simplejwt',
     'celery',

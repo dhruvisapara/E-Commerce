@@ -2,8 +2,9 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
 from django_extensions.db.models import ActivatorModel
+from E_Commrce.settings import AUTH_USER_MODEL
 from category.models import Category
-from customer.models import Business, Customer
+from customer.models import Business
 from tag.models import TaggedItem
 
 
@@ -11,7 +12,7 @@ class Products(ActivatorModel):
     name = models.CharField(max_length=50)
     price = models.DecimalField(decimal_places=3, max_digits=10)
     category = models.ManyToManyField(Category, related_name='product')
-    user = models.ForeignKey(Customer, on_delete=models.SET_NULL, related_name="products", null=True, blank=True)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="products", null=True, blank=True)
     business_user = models.ForeignKey(Business, on_delete=models.SET_NULL, related_name="product_user", default=None,
                                       null=True)
     slug = AutoSlugField(populate_from='name')

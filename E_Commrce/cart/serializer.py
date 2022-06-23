@@ -44,6 +44,12 @@ class CartSerializer(ModelSerializer):
             "get_total_items",
         ]
 
+    def validate_get_total_price(value):
+        if value < 1000:
+            raise serializers.ValidationError(
+                "your order amount is less then 999 so you have to pay delivery charges."
+                "Do you really want to continue.")
+
     def create(self, validated_data):
 
         carts = validated_data.pop("carts")

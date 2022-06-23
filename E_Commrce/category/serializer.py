@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, ListSerializer
+from rest_framework.serializers import ModelSerializer
 from category.models import Category
 
 
@@ -33,7 +33,11 @@ class CategorySerializer(ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ("id", "categories", "sub_categories", "description","user")
+        fields = ("id", "categories", "sub_categories", "description", "user")
+
+    def validate(self, attrs):
+        if "user" != 1:
+            raise serializers.ValidationError("Only super admin can add category .")
 
     def create(self, validated_data):
 
@@ -42,7 +46,6 @@ class CategorySerializer(ModelSerializer):
         parent = super(CategorySerializer, self).create(validated_data)
 
         for sub_category in sub_categories:
-
             sub_category["parent"] = parent.id
             sub_cat_serializer = SubCategorySerializer(data=sub_category)
             sub_cat_serializer.is_valid(raise_exception=True)
@@ -67,7 +70,7 @@ class CategorySerializer(ModelSerializer):
 
                 if Category.objects.filter(id=sub_category["id"]).exists():
                     sub_cat = Category.objects.get(id=sub_category["id"])
-                    sub_cat.name = sub_category.get("name", sub_cat.name)
+                    sub_cat.categories = sub_category.get("categories", sub_cat.categories)
                     sub_cat.description = sub_category.get(
                         "description", sub_cat.description
                     )
@@ -81,4 +84,3 @@ class CategorySerializer(ModelSerializer):
                 sub_cat.save()
 
         return instance
-

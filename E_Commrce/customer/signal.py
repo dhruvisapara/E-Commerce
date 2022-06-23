@@ -1,5 +1,8 @@
+from django.db.models import F
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+from cart.models import Cart, CartItem
 from customer.models import Business, Customer
 from customer.task import send_email_task, mail_about_business_for_admin
 
@@ -15,3 +18,5 @@ def business_user(sender, instance, *args, **kwargs):
 @receiver(post_save, sender=Customer)
 def mail_sent_after_sign_up(sender, instance, *args, **kwargs):
     send_email_task.delay()
+
+

@@ -8,13 +8,14 @@ class OrderSerializer(ModelSerializer):
     address = serializers.CharField(source="user.address", read_only=True)
     phone = serializers.CharField(source="user.phone_number", read_only=True)
     items = serializers.IntegerField(source="cart.get_total_items", read_only=True)
-    price = serializers.IntegerField(source="cart.get_total_cost",read_only=True)
+    price = serializers.IntegerField(source="cart.get_total_cost", read_only=True)
     points = serializers.SerializerMethodField()
 
     def get_points(self, obj):
         points = Points.objects.filter(user=obj.user).first()
         points_collection = points.points_gained if points else "Sorry there is no points in your account."
         return points_collection
+
 
     class Meta:
         model = Order
@@ -28,6 +29,8 @@ class OrderSerializer(ModelSerializer):
             "address",
             "phone",
             "points",
+            "user",
+
         ]
 
     def create(self, validated_data):

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueValidator
 from customer.models import Customer, Business
-from customer.validations import  validate_company_name,validate_revenue
+from customer.validations import validate_company_name, validate_revenue
 
 
 class CustomerSerializer(ModelSerializer):
@@ -91,26 +91,30 @@ class BusinessUserSerializer(ModelSerializer):
     #     elif data["revenue"] < 50000:
     #         raise serializers.ValidationError("Your company revenue is not enough.")
     #     return data
-    def validate_company_name(self, value):
-        if Business.objects.filter(company_name=value).exists():
-            raise serializers.ValidationError("This company is already registered .")
+    # def validate_company_name(self, value):
+    #     if Business.objects.filter(company_name=value).exists():
+    #         raise serializers.ValidationError("This company is already registered .")
+    #
+    #     return value
 
-        return value
+    # def validate_revenue(self, value):
+    #
+    #     if value < 50000:
+    #         raise serializers.ValidationError("Your company revenue is not enough.")
+    #     return value
+    #
 
-    def validate_revenue(self, value):
-
-        if value < 50000:
-            raise serializers.ValidationError("Your company revenue is not enough.")
-        return value
 
 class StaffMembersSerializer(ModelSerializer):
     staff_members = CustomerSerializer(many=True)
     id = serializers.IntegerField(required=False)
+    company_name = serializers.SerializerMethodField()
+    username = serializers.CharField(read_only=True)
 
     class Meta:
 
         model = Customer
-        fields = ["id", "staff_members"]
+        fields = ["id", "staff_members", "company_name", "username"]
 
     def validate(self, data):
         """
@@ -177,3 +181,8 @@ class StaffMembersSerializer(ModelSerializer):
                 staff.save()
 
         return instance
+
+    def get_company_name(self, obj):
+        user = Business.objects.filter(business_customer=obj.manager.id)
+        serializer = BusinessUserSerializer(instance=user, many=True)
+        return serializer.data
