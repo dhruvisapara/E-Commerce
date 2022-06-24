@@ -50,16 +50,3 @@ class CartItem(models.Model):
     def get_quantity(self):
         return self.quantity
 
-    # def update_total(self):
-    #     cart_total = self.cart_item.total
-    #     shipping_total = self.cart_item.text_total
-    #     new_total = math.fsum([shipping_total, cart_total])
-    #     formatted_total = format(new_total, '.2f')
-    #     self.total = formatted_total
-    #     self.save()
-    #     return new_total
-
-    # def get_cart_deal_total(self):
-    #     orderitem = self.cart_item.number_of_items()
-    #     total = sum(item.get_total_price for item in orderitem)
-    #     return total

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'cart',
     'order',
     'address',
+    'payments',
     'django_filters',
     'rest_framework_simplejwt',
     'celery',
@@ -206,3 +207,7 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'dhruvi.sapara@trootech.com'
 EMAIL_HOST_PASSWORD = '0K*^v#12@8'
+
+# stripe Api keys
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51LE9ZESCeFbdDABQwxwr3zg9DCfoxnFd9iE0D4CWoVszC6CycNMWkUmfWtVgaWeBRO0cQiWml2k33aQlJXnLjZsD00maAslAml'
+STRIPE_SECRET_KEY = 'sk_test_51LE9ZESCeFbdDABQ3olyTyP7elkIVCNZJJHjy9YPwR3SRlxddCjD8ENbK3ndjKAsGhOOz1IdqlatFoj9gLkZpjR000m3oy61ZT'
