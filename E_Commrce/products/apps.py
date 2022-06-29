@@ -7,4 +7,4 @@ class ProductsConfig(AppConfig):
 
     def ready(self):
 
-        from products import signal
+        from products import signals

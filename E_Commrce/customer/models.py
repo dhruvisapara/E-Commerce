@@ -9,6 +9,7 @@ from utils.constant import (
     BUISNESS_TYPE,
     B2B_COMPANIES
 )
+from pdb import set_trace as pdb
 
 
 class Customer(AbstractUser):
@@ -36,7 +37,7 @@ class Customer(AbstractUser):
     address = models.TextField(blank=True)
     phone_number = models.CharField(
         validators=[phone_regex], max_length=17, blank=True
-    )  # Validators should be a list
+    )
     age = models.IntegerField(default=None, null=True, blank=True)
     manager = models.ForeignKey(
         "self",
@@ -61,9 +62,11 @@ class Customer(AbstractUser):
     @property
     def full_name(self):
         """Returns the customer's full name."""
-        return "%s %s" % (self.first_name, self.last_name)
+        return "{first_name}, {last_name}".format(first_name=self.first_name,
+                                                  last_name=self.last_name,
+                                                  )
 
-    def isExists(self):
+    def is_exists(self):
         """To check by email that user is existed or not"""
         if Customer.objects.filter(email=self.email):
             return True
@@ -91,7 +94,7 @@ class Business(models.Model):
         default=B2B_COMPANIES, choices=BUISNESS_TYPE, max_length=15
     )
     Year_of_Establishment = models.DateField()
-    number_of_employees=models.IntegerField(default=4)
+    number_of_employees = models.IntegerField(default=4)
     product_category = models.CharField(max_length=10)
     revenue = models.DecimalField(decimal_places=3, max_digits=20)
     offline_channel = models.BooleanField()

@@ -1,6 +1,7 @@
 import django_filters
 from django_filters import rest_framework as filters
 from category.models import Category
+from pdb import set_trace as pdb
 
 
 class Searchfilter(filters.FilterSet):

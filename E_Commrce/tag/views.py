@@ -1,10 +1,14 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from E_Commrce.permission import StaffPermission
 from tag.models import TaggedItem
-from tag.serializer import TagSerializer
+from tag.serializers import TagSerializer
 
 
 class TagViewSet(ModelViewSet):
+    """
+        This viewset is for create tags,update and delete tags by staff members only.
+    """
     serializer_class = TagSerializer
     queryset = TaggedItem.objects.all()
-    authentication_classes = [JWTAuthentication]
+    permission_classes = [StaffPermission]

@@ -1,6 +1,8 @@
-from django.db import models
-from E_Commrce.settings import AUTH_USER_MODEL
 from django.core.validators import RegexValidator
+from django.db import models
+
+from E_Commrce.settings import AUTH_USER_MODEL
+from pdb import set_trace as pdb
 
 
 class Address(models.Model):
@@ -26,5 +28,11 @@ class Address(models.Model):
     @property
     def full_address(self):
         """Returns the customer's full address"""
-        return "%s  %s  %s  %s  %s  %s  %s " % (
-        self.name, self.flat_number, self.building_name, self.block, self.floor, self.street, self.area)
+        return "{name}, {flat}, {floor}, {block}, {building_name}, " \
+               "{street}, {area}".format(name=self.name,
+                                         flat=self.flat_number,
+                                         floor=self.floor,
+                                         block=self.block,
+                                         building_name=self.building_name,
+                                         street=self.street,
+                                         area=self.area)

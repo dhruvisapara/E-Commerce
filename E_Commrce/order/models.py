@@ -1,12 +1,12 @@
 from django.db import models
 from django_extensions.db.models import ActivatorModel
-from rest_framework.exceptions import ValidationError
 
 from E_Commrce.settings import AUTH_USER_MODEL
 from address.models import Address
 from cart.models import Cart
 from products.models import Products
 from utils.constant import ORDER_STATUSES, SUBMITTED
+from pdb import set_trace as pdb
 
 
 class Order(ActivatorModel):

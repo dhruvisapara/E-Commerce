@@ -7,4 +7,4 @@ class CustomerConfig(AppConfig):
 
     def ready(self):
         # super(CustomerConfig, self).ready()
-        from customer import signal
+        from customer import signals

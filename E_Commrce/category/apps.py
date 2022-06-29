@@ -8,4 +8,4 @@ class CategoryConfig(AppConfig):
 
     def ready(self):
         super(CategoryConfig, self).ready()
-        from category import signal
+        from category import signals

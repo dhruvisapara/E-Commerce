@@ -1,28 +1,22 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from E_Commrce.permission import StaffPermission, Modification_permission
-from category.filters import Searchfilter
+
 from category.models import Category
-from category.serializer import CategorySerializer
+from category.serializers import CategorySerializer
+from E_Commrce.permission import ModificationPermission, StaffPermission
+from pdb import set_trace as pdb
 
 
 class CategoryView(ModelViewSet):
+    """
+        Category will create here.
+        Existing category should update ,destroy and retrieve by created user.
+    """
     serializer_class = CategorySerializer
-    authentication_classes = [JWTAuthentication]
     permission_classes = [
-        StaffPermission, Modification_permission,
+        StaffPermission, ModificationPermission,
 
     ]
     queryset = Category.objects.all()
-    filter_backends = (DjangoFilterBackend,)
-    filter_class = Searchfilter
 
-# class SubCategoryView(ModelViewSet):
-#     serializer_class = SubCategorySerializer
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [StaffPermission]
-#     queryset = Category.objects.all()
-#     filter_backends = (DjangoFilterBackend,)
-#     filter_class = Searchfilter
+    filterset_fields = ["categories", "tags__tag"]
+    search_fields = ["categories", "tags__tag"]

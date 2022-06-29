@@ -1,1 +1,1 @@
-default_app_config = 'category.apps.CategoryConfig'
+# default_app_config = 'category.apps.CategoryConfig'

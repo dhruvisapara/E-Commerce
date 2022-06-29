@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 from datetime import timedelta
+from json import tool
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     'cart',
     'order',
     'address',
-    'payments',
     'django_filters',
     'rest_framework_simplejwt',
     'celery',
@@ -85,8 +85,7 @@ CELERY_ALWAYS_EAGER = True
 ROOT_URLCONF = 'E_Commrce.urls'
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
@@ -96,7 +95,10 @@ REST_FRAMEWORK = {
     'DATE_INPUT_FORMATS': ["%d-%m-%Y", ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter', ]
+        'rest_framework.filters.SearchFilter','rest_framework.filters.OrderingFilter'],
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 1
 
 }
 TEMPLATES = [
@@ -209,5 +211,5 @@ EMAIL_HOST_USER = 'dhruvi.sapara@trootech.com'
 EMAIL_HOST_PASSWORD = '0K*^v#12@8'
 
 # stripe Api keys
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51LE9ZESCeFbdDABQwxwr3zg9DCfoxnFd9iE0D4CWoVszC6CycNMWkUmfWtVgaWeBRO0cQiWml2k33aQlJXnLjZsD00maAslAml'
-STRIPE_SECRET_KEY = 'sk_test_51LE9ZESCeFbdDABQ3olyTyP7elkIVCNZJJHjy9YPwR3SRlxddCjD8ENbK3ndjKAsGhOOz1IdqlatFoj9gLkZpjR000m3oy61ZT'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51LE9ZESCeFbdDABQwxwr3zg9DCfoxnFd9iE0D4CWoVszC6CycNMWkUmfWtVgaWeBRO0cQiWml2k33aQlJXnLjZsD00maAslAml '
+STRIPE_SECRET_KEY = 'sk_test_51LE9ZESCeFbdDABQ3olyTyP7elkIVCNZJJHjy9YPwR3SRlxddCjD8ENbK3ndjKAsGhOOz1IdqlatFoj9gLkZpjR000m3oy61ZT '

@@ -6,7 +6,7 @@ from django.db import models
 from E_Commrce.settings import AUTH_USER_MODEL
 from category.manager import CustomManger
 from tag.models import TaggedItem
-
+from pdb import set_trace as pdb
 
 class Category(ActivatorModel):
     categories = models.CharField(max_length=100)
@@ -22,6 +22,6 @@ class Category(ActivatorModel):
         default=None,
 
     )
-    tags = GenericRelation(TaggedItem, related_query_name="category")
+    tags = GenericRelation(TaggedItem, related_query_name="tag_category")
     category = models.Manager()
     name = CustomManger()
