@@ -1,7 +1,8 @@
+from typing import Any
+
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from category.models import Category
-from pdb import set_trace as pdb
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -20,14 +21,15 @@ class CategorySerializer(ModelSerializer):
         model = Category
         fields = ("id", "categories", "sub_categories", "description", "user")
 
-    def validate(self, attrs):
-        """
-            It validates that category should create by superuser only.
-        """
-        if "user" != 1:
-            raise serializers.ValidationError("Only super admin can add category .")
+    # def validate(self, attrs):
+    #     """
+    #         It validates that category should create by superuser only.
+    #     """
+    #     import pdb ; pdb.set_trace()
+    #     if "user" != 1:
+    #         raise serializers.ValidationError("Only super admin can add category .")
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> Any:
         """
             This should create subcategories with categories using writable nested serializer.
         """
@@ -43,7 +45,7 @@ class CategorySerializer(ModelSerializer):
 
         return parent
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data) -> Any:
         """
             This should update existing categories,subcategories and add new subcategories at a time.
         """
@@ -69,3 +71,9 @@ class CategorySerializer(ModelSerializer):
                 sub_cat.save()
 
         return instance
+
+
+class CatSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["categories"]

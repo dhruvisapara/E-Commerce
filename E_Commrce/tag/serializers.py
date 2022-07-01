@@ -8,6 +8,7 @@ from tag.models import TaggedItem
 
 
 class TagSerializer(ModelSerializer):
+    content_types = serializers.CharField(source="content_type.name")
     category_tag_types = serializers.SerializerMethodField()
     product_tag_type = serializers.SerializerMethodField()
 

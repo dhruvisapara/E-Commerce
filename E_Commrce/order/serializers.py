@@ -1,4 +1,4 @@
-from pdb import set_trace as pdb
+from collections import OrderedDict
 
 import stripe
 from rest_framework import serializers
@@ -51,7 +51,7 @@ class OrderSerializer(ModelSerializer):
             "user": {"write_only": True},
         }
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> Order:
         """
             It creates payment intent using stripe PaymentIntent for particular orders.
         """
@@ -65,7 +65,7 @@ class OrderSerializer(ModelSerializer):
         print(response)
         return product
 
-    def validate(self, data):
+    def validate(self, data) -> dict:
         """
             cart use as reference for order only once.
         """
@@ -73,7 +73,7 @@ class OrderSerializer(ModelSerializer):
             raise serializers.ValidationError("This cart is already ordered.")
         return data
 
-    def to_representation(self, instance):
+    def to_representation(self, instance) -> OrderedDict:
         """
             To represent cart and address more elaborately.
         """

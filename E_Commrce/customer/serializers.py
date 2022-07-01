@@ -1,10 +1,11 @@
+from typing import Any
+
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueValidator
 from customer.models import Customer, Business
 from customer.validations import validate_company_name, validate_revenue
-from pdb import set_trace as pdb
 
 
 class CustomerSerializer(ModelSerializer):
@@ -46,7 +47,7 @@ class CustomerSerializer(ModelSerializer):
             "last_name": {"required": True},
         }
 
-    def validate(self, attrs):
+    def validate(self, attrs) -> dict:
         """
         It should validate that both passwords are same.
         """
@@ -56,7 +57,7 @@ class CustomerSerializer(ModelSerializer):
             )
         return attrs
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> Any:
         """
         It should convert password into hashed format.
         """
@@ -76,7 +77,7 @@ class BusinessUserSerializer(ModelSerializer):
         model = Business
         fields = "__all__"
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> object:
         """
             It should create current user as business user.
         """
@@ -97,7 +98,7 @@ class StaffMembersSerializer(ModelSerializer):
 
     def validate(self, data):
         """
-        It should validate that manager must register least one company
+        It should validate that manager must register the least one company
         """
 
         if not Business.objects.filter(business_customer_id=data["id"]).exists():
@@ -106,7 +107,7 @@ class StaffMembersSerializer(ModelSerializer):
             )
         return data
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> Any:
         """
             Now manager add multiple staff members using writable nested serializer.
             For generated staff members parent will be manager(current user)
@@ -122,7 +123,7 @@ class StaffMembersSerializer(ModelSerializer):
 
         return manager
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data) -> Customer:
         """
         manager can create and update and destroy staff members.
         """
@@ -164,7 +165,7 @@ class StaffMembersSerializer(ModelSerializer):
 
         return instance
 
-    def get_company_name(self, obj):
+    def get_company_name(self, obj) -> dict:
         user = Business.objects.filter(business_customer=obj.manager.id)
         serializer = BusinessUserSerializer(instance=user, many=True)
         return serializer.data

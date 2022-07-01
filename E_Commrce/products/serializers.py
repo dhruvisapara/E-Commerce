@@ -7,7 +7,7 @@ from products.models import Products
 
 class ProductListSerializer(ListSerializer):
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> Products:
         """
             It should create multiple products at a time in list.
         """
@@ -15,7 +15,7 @@ class ProductListSerializer(ListSerializer):
         bulk_product = Products.objects.bulk_create(product)
         return bulk_product
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data) -> list:
         """
             to update list data .
         """

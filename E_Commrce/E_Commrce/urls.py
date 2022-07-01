@@ -14,8 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 
+API_PREFIX = '<version>(v1)'
 urlpatterns = [
 
     ################## admin url ##################################
@@ -23,12 +24,18 @@ urlpatterns = [
 
     ################## custom app urls #############################
 
-    path('api/v1/', include('customer.urls')),
-    path("api/v1/", include('category.urls')),
-    path("api/v1/", include('products.urls')),
+    re_path(r"^api/(?P<version>(v1|v2))/", include('category.urls')),
+    re_path(r"^api/(?P<version>(v1|v2))/", include('customer.urls')),
+    re_path(r"^api/(?P<version>(v1|v2))/", include('products.urls')),
+    # re_path(r"^api/(?P<version>(v1|v2))/", include('cart.urls')),
+    re_path(r"^api/(?P<version>(v1|v2))/", include('order.urls')),
+    re_path(r"^api/(?P<version>(v1|v2))/", include('address.urls')),
+    re_path(r"^api/(?P<version>(v1|v2))/", include('tag.urls')),
+    # path('api/v1/', include('customer.urls')),
+    # path("api/v1/", include('products.urls')),
     path("api/v1/", include('cart.urls')),
-    path("api/v1/", include('order.urls')),
-    path("api/v1/", include('address.urls')),
-    path("api/v1/", include('tag.urls')),
+    # path("api/v1/", include('order.urls')),
+    # path("api/v1/", include('address.urls')),
+    # path("api/v1/", include('tag.urls')),
 
 ]

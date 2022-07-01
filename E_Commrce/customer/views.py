@@ -1,16 +1,13 @@
-from rest_framework import status
+from django.db.models import QuerySet
 from rest_framework.generics import ListAPIView
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import AllowAny, IsAdminUser
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ViewSet
 
 from customer.models import Business, Customer
 from customer.serializers import (BusinessUserSerializer, CustomerSerializer,
                                   StaffMembersSerializer)
-from customer.tasks import send_email_task
 from E_Commrce.permission import UserBusinessPermission
-from pdb import set_trace as pdb
 
 
 class Registration(ViewSet, CreateModelMixin):
@@ -32,7 +29,7 @@ class Userlist(ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """
             Only returns current user details.
         """
@@ -46,7 +43,7 @@ class BusinessViewSet(ModelViewSet):
         UserBusinessPermission
     ]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """
             This queryset returns business registered by this user.
         """
@@ -58,7 +55,7 @@ class RegisterStaffViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     permission_classes = [IsAdminUser, ]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """
             It should display all staff user list created by current user.
         """
@@ -69,8 +66,8 @@ class StaffProfileViewSet(ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """
-                    It should display all staff user list created by current user.
-                """
+         It should display all staff user list created by current user.
+        """
         return self.queryset.filter(manager=self.request.user.id)

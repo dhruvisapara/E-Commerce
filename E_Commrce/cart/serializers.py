@@ -1,7 +1,8 @@
+from typing import Any
+
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from cart.models import Cart, CartItem
-from pdb import set_trace as pdb
 
 
 class CartItemSerializer(ModelSerializer):
@@ -45,16 +46,16 @@ class CartSerializer(ModelSerializer):
             "get_total_items",
         ]
 
-    def validate_get_total_price(value):
-        """
-            For applying delivery charges check total of the bill.
-        """
-        if value < 1000:
-            raise serializers.ValidationError(
-                "your order amount is less then 999 so you have to pay delivery charges."
-                "Do you really want to continue.")
+    # def validate_get_total_cost(data) -> None:
+    #     """
+    #         For applying delivery charges check total of the bill.
+    #     """
+    #     if data < 10000:
+    #         raise serializers.ValidationError(
+    #             "your order amount is less then 999 so you have to pay delivery charges."
+    #             "Do you really want to continue.")
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> Any:
         """
             cart will be created by adding multiple cart items using writable nested serializer.
         """
@@ -66,7 +67,7 @@ class CartSerializer(ModelSerializer):
             CartItem.objects.create(cart_item=cart, **item)
         return cart
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data) -> Any:
         """
             cart will be updated with cart items.
         """
