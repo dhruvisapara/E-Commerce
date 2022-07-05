@@ -1,5 +1,3 @@
-from typing import Any
-
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from cart.models import Cart, CartItem
@@ -55,7 +53,7 @@ class CartSerializer(ModelSerializer):
     #             "your order amount is less then 999 so you have to pay delivery charges."
     #             "Do you really want to continue.")
 
-    def create(self, validated_data) -> Any:
+    def create(self, validated_data) -> Cart:
         """
             cart will be created by adding multiple cart items using writable nested serializer.
         """
@@ -67,7 +65,7 @@ class CartSerializer(ModelSerializer):
             CartItem.objects.create(cart_item=cart, **item)
         return cart
 
-    def update(self, instance, validated_data) -> Any:
+    def update(self, instance, validated_data) -> Cart:
         """
             cart will be updated with cart items.
         """

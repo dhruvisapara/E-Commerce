@@ -8,11 +8,13 @@ from category.manager import CustomManger
 from tag.models import TaggedItem
 from pdb import set_trace as pdb
 
+
 class Category(ActivatorModel):
     categories = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     slug = AutoSlugField(populate_from="categories")
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, default=None, related_name="category_parent",null=True,blank=True)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, default=None, related_name="category_parent",
+                             null=True, blank=True)
     parent = models.ForeignKey(
         "self",
         blank=True,

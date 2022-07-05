@@ -1,12 +1,15 @@
-from category.fixtures import faker
+from factory.django import DjangoModelFactory
 from category.models import Category
 import factory
-from pdb import set_trace as pdb
+from customer.factories import CustomerFactory
+
+from rest_framework.test import APIRequestFactory
 
 
-class CategoryFactory(factory.django.DjangoModelFactory):
+class CategoryFactory(DjangoModelFactory):
     class Meta:
         model = Category
 
-    categories = factory.LazyAttribute(lambda _: faker.categories())
-    description = factory.LazyAttribute(lambda _: faker.description())
+    categories = factory.Faker("name")
+    description = factory.Faker("name")
+    user = factory.SubFactory(CustomerFactory)

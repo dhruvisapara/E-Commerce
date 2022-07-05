@@ -1,15 +1,16 @@
+import pdb
 from typing import Any
 
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from E_Commrce.mixin import CustomRenderer
 from category.models import Category
 from category.serializers import CategorySerializer, CatSerializer
-from E_Commrce.pagination import CustomPagination
 from E_Commrce.permission import StaffPermission
+from products.models import Products
 
 
 class CategoryView(ModelViewSet):
@@ -28,6 +29,7 @@ class CategoryView(ModelViewSet):
     filterset_fields = ["categories", "tags__tag"]
     search_fields = ["categories", "tags__tag"]
     ordering_fields = ['id', "categories", "tag"]
+    # renderer_classes = [CustomRenderer,]
 
     def get_serializer_class(self) -> Any:
         if self.request.version == 'v1':
@@ -35,21 +37,14 @@ class CategoryView(ModelViewSet):
         return CatSerializer
 
     def list(self, request, *args, **kwargs) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
         page_size = self.request.query_params.get('page_size')
-
         if page_size:
-            self.pagination_class.page_size = page_size
             if page_size.lower() == 'all':
-                self.pagination_class.page_size = len(queryset)
-        page = self.paginate_queryset(queryset)
+                self.pagination_class.page_size = len(self.queryset)
 
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        response = super().list(self, request)
 
-        serializer = self.get_serializer(queryset, many=True)
-        return Response({'message': "successfully", 'result': serializer.data})
+        return Response({'message': "successfully", 'result': response.data})
 
     # @action(detail=False, methods=['post'])
     # def all_queryset(self, request):
@@ -57,7 +52,7 @@ class CategoryView(ModelViewSet):
     #     serializer = self.serializer_class(items, many=True)
     #     return Response({"message": "successfully added.", "items": serializer.data})
 
-    @action(detail=False,methods=["post"])
+    @action(detail=False, methods=["post"])
     def category_create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -65,3 +60,8 @@ class CategoryView(ModelViewSet):
         self.get_paginated_response(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    @action(detail=True, methods=['get'])
+    def category_product(self, request, pk):
+        import pdb;pdb.set_trace()
+        response = Products.objects.filter(category__id=pk)
+        return Response(response)

@@ -16,7 +16,7 @@ class TagSerializer(ModelSerializer):
         model = TaggedItem
         fields = "__all__"
 
-    def get_category_tag_types(self, instance):
+    def get_category_tag_types(self, instance) -> CategorySerializer:
         """
             It should display category for tags if tag is related to category.
         """
@@ -24,7 +24,7 @@ class TagSerializer(ModelSerializer):
         serializer = CategorySerializer(data=tag_types, many=True)
         return serializer.initial_data
 
-    def get_product_tag_type(self, instance):
+    def get_product_tag_type(self, instance) -> ProductSerializer:
         """
             It should display product for tags if tag is related to products.
         """

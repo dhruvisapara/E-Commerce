@@ -57,7 +57,7 @@ class CustomerSerializer(ModelSerializer):
             )
         return attrs
 
-    def create(self, validated_data) -> Any:
+    def create(self, validated_data) -> Customer:
         """
         It should convert password into hashed format.
         """
@@ -107,7 +107,7 @@ class StaffMembersSerializer(ModelSerializer):
             )
         return data
 
-    def create(self, validated_data) -> Any:
+    def create(self, validated_data) -> Customer:
         """
             Now manager add multiple staff members using writable nested serializer.
             For generated staff members parent will be manager(current user)

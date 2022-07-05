@@ -6,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from cart.models import Cart, CartItem
 from cart.serializers import CartItemSerializer, CartSerializer
-from E_Commrce.mixxin import CustomRenderer
+from E_Commrce.mixin import CustomRenderer
 from E_Commrce.permission import ModificationPermission
 from order.models import Order
 
@@ -27,6 +27,22 @@ class CartView(ModelViewSet):
         orders = Order.objects.all()
         cart_order = Cart.objects.exclude(cart_order__id__in=orders)
         return cart_order
+
+    def get_renderer_context(self) -> dict:
+        context = super().get_renderer_context()
+        context['message'] = "hello"
+        return context
+
+    def list(self, request, *args, **kwargs) -> Response:
+        page_size = self.request.query_params.get('page_size')
+        if page_size:
+            if page_size.lower() == 'all':
+                self.pagination_class.page_size = len(self.queryset)
+
+        response = super().list(self, request)
+        if self.queryset.count() == 0:
+            return Response({'message': "This Cart is empty."})
+        return Response({'message': "successfully", 'result': response.data})
 
 
 class CartItemAPIView(APIView):

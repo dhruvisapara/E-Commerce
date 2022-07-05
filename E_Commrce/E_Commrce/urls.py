@@ -24,7 +24,7 @@ urlpatterns = [
 
     ################## custom app urls #############################
 
-    re_path(r"^api/(?P<version>(v1|v2))/", include('category.urls')),
+    # re_path(r"^api/(?P<version>(v1|v2))/", include('category.urls')),
     re_path(r"^api/(?P<version>(v1|v2))/", include('customer.urls')),
     re_path(r"^api/(?P<version>(v1|v2))/", include('products.urls')),
     # re_path(r"^api/(?P<version>(v1|v2))/", include('cart.urls')),
@@ -32,6 +32,7 @@ urlpatterns = [
     re_path(r"^api/(?P<version>(v1|v2))/", include('address.urls')),
     re_path(r"^api/(?P<version>(v1|v2))/", include('tag.urls')),
     # path('api/v1/', include('customer.urls')),
+    path('api/v1/', include('category.urls')),
     # path("api/v1/", include('products.urls')),
     path("api/v1/", include('cart.urls')),
     # path("api/v1/", include('order.urls')),

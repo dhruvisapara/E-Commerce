@@ -1,8 +1,9 @@
-from typing import Any
-
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import (HyperlinkedModelSerializer,
+                                        ModelSerializer)
+
 from category.models import Category
+from products.serializers import ProductSerializer
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -16,10 +17,11 @@ class SubCategorySerializer(serializers.ModelSerializer):
 class CategorySerializer(ModelSerializer):
     sub_categories = SubCategorySerializer(many=True)
     id = serializers.IntegerField(required=False)
+    product = ProductSerializer(read_only=True,many=True)
 
     class Meta:
         model = Category
-        fields = ("id", "categories", "sub_categories", "description", "user")
+        fields = ("id", "categories", "product", "sub_categories", "description", "user")
 
     # def validate(self, attrs):
     #     """
@@ -29,7 +31,7 @@ class CategorySerializer(ModelSerializer):
     #     if "user" != 1:
     #         raise serializers.ValidationError("Only super admin can add category .")
 
-    def create(self, validated_data) -> Any:
+    def create(self, validated_data) -> Category:
         """
             This should create subcategories with categories using writable nested serializer.
         """
@@ -45,7 +47,7 @@ class CategorySerializer(ModelSerializer):
 
         return parent
 
-    def update(self, instance, validated_data) -> Any:
+    def update(self, instance, validated_data) -> Category:
         """
             This should update existing categories,subcategories and add new subcategories at a time.
         """
@@ -73,7 +75,7 @@ class CategorySerializer(ModelSerializer):
         return instance
 
 
-class CatSerializer(ModelSerializer):
+class CatSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Category
-        fields = ["categories"]
+        fields = ["id", "url", "categories"]

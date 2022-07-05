@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from E_Commrce.mixxin import CustomRenderer
+from E_Commrce.mixin import CustomRenderer
 from E_Commrce.permission import ModificationPermission, StaffPermission
 from products.filters import ProductFilter
 from products.models import Products
@@ -17,7 +17,7 @@ class ProductViewSet(ModelViewSet):
                         "user__username"]
     search_fields = ["name", "brand", "category__categories", "user__username", "is_featured", "is_bestseller"]
     ordering_fields = ['name', 'brand', 'category__categories', 'user__username']
-    renderer_classes = CustomRenderer
+    # renderer_classes = [CustomRenderer]
 
     def perform_create(self, serializer) -> None:
         """
