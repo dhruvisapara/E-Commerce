@@ -1,14 +1,24 @@
 import pytest
-from rest_framework.reverse import reverse
 from customer.models import Customer
-from pdb import set_trace as pdb
 from rest_framework.test import APIClient
 
 
 @pytest.fixture
-def user_A(db) -> Customer:
+def active_user(db) -> Customer:
     "It creates user A for test purposes."
-    return Customer.objects.create_user("A")
+    return Customer.objects.create_user(username="active-user", is_staff=True)
+
+
+@pytest.fixture
+def inactivate_user(db) -> Customer:
+    "It creates user A for test purposes."
+    return Customer.objects.create_user(username="inactive", is_staff=False)
+
+
+@pytest.fixture
+def api_client():
+    from rest_framework.test import APIClient
+    return APIClient()
 
 
 @pytest.fixture

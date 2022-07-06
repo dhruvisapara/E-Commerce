@@ -3,6 +3,8 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from category.manager import CustomManger
 from utils.constant import (
     FEMALE,
     GENDER,
@@ -101,3 +103,4 @@ class Business(models.Model):
     company_profile = models.TextField()
     portfolio = models.IntegerField()
     objects = models.Manager()
+

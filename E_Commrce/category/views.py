@@ -3,6 +3,7 @@ from typing import Any
 
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -11,6 +12,8 @@ from category.models import Category
 from category.serializers import CategorySerializer, CatSerializer
 from E_Commrce.permission import StaffPermission
 from products.models import Products
+
+OrderingFilter
 
 
 class CategoryView(ModelViewSet):
@@ -28,7 +31,9 @@ class CategoryView(ModelViewSet):
     queryset = Category.objects.all()
     filterset_fields = ["categories", "tags__tag"]
     search_fields = ["categories", "tags__tag"]
-    ordering_fields = ['id', "categories", "tag"]
+
+    # ordering_fields = ['id', "tag"]
+
     # renderer_classes = [CustomRenderer,]
 
     def get_serializer_class(self) -> Any:
@@ -38,10 +43,8 @@ class CategoryView(ModelViewSet):
 
     def list(self, request, *args, **kwargs) -> Response:
         page_size = self.request.query_params.get('page_size')
-        if page_size:
-            if page_size.lower() == 'all':
-                self.pagination_class.page_size = len(self.queryset)
-
+        if page_size and page_size.lower() == 'all':
+            self.pagination_class.page_size = len(self.queryset)
         response = super().list(self, request)
 
         return Response({'message': "successfully", 'result': response.data})
@@ -62,6 +65,5 @@ class CategoryView(ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def category_product(self, request, pk):
-        import pdb;pdb.set_trace()
         response = Products.objects.filter(category__id=pk)
         return Response(response)
