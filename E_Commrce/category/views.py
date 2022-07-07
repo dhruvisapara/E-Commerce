@@ -1,19 +1,14 @@
-import pdb
 from typing import Any
 
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from E_Commrce.mixin import CustomRenderer
 from category.models import Category
 from category.serializers import CategorySerializer, CatSerializer
-from E_Commrce.permission import StaffPermission
+from E_Commrce.permission import StaffPermission, SuperUserPermission
 from products.models import Products
-
-OrderingFilter
 
 
 class CategoryView(ModelViewSet):
@@ -24,15 +19,13 @@ class CategoryView(ModelViewSet):
 
     serializer_class = CategorySerializer
     permission_classes = [
-        StaffPermission
-
+        StaffPermission,SuperUserPermission
     ]
     # pagination_class = CustomPagination
     queryset = Category.objects.all()
     filterset_fields = ["categories", "tags__tag"]
     search_fields = ["categories", "tags__tag"]
-
-    # ordering_fields = ['id', "tag"]
+    ordering_fields = ['id', "tag"]
 
     # renderer_classes = [CustomRenderer,]
 

@@ -8,8 +8,16 @@ class StaffPermission(BasePermission):
         """
         This permission is only for staff members.
         """
+        # return request.user and request.user.is_staff
+        return request.user.is_staff
 
-        return request.user and request.user.is_staff
+
+class SuperUserPermission(BasePermission):
+    def has_permission(self, request, view):
+        """
+               This permission is only for superuser.
+        """
+        return request.user.is_superuser
 
 
 class ModificationPermission(BasePermission):

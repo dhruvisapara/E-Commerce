@@ -1,46 +1,36 @@
-import pytest
-from pytest_factoryboy import register
-from django.test import TestCase
-from category.factories import CategoryFactory
-from customer.models import Customer
-from rest_framework.test import APIClient
-
-register(CategoryFactory)
+from rest_framework import status
+from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 
 
-@pytest.mark.django_db
-def test_staff_member_active(active_user: Customer):
-    assert active_user.is_staff == True
+def test_create_category(create_category, api_client):
+    """
+        It should test that only superuser can create the category.
+    """
+    response = api_client.post('http://127.0.0.1:8000/api/v1/category/', json=create_category)
+    assert response.status_code, status.HTTP_201_CREATED
 
 
-@pytest.mark.django_db
-def test_negetive_user(inactivate_user: Customer):
-    assert inactivate_user.is_staff == False
+def test_for_staff(staff_user, api_client):
+    """
+    It should return success code for staff user.
+    """
+    api_client.force_authenticate(staff_user)
+    response = api_client.get('http://127.0.0.1:8000/api/v1/category/')
+    assert response.status_code == HTTP_200_OK
 
 
-# def test_unauthorized_request(api_client):
-#     import pdb;
-#     pdb.set_trace()
-#     url = reverse('http://127.0.0.1:8000/api/v1/category/')
-#
-#     response = api_client.get(url)
-#     assert response.status_code == 401
-#     assert response.customer.is_staff == True
+def test_for_non_staff(non_staff_user, api_client):
+    """
+    It should give status code for non_staff user
+    """
+    api_client.force_authenticate(non_staff_user)
+    response = api_client.get('http://127.0.0.1:8000/api/v1/category/')
+    assert response.status_code == HTTP_403_FORBIDDEN
 
 
-class MyTest(TestCase):
+def test_check_any_matching_category(create_category, api_client,create_sub_category):
+    """
+    It should test that any existing category is there.
+    """
 
-    def setUp(self):
-        self.client = APIClient()
-        self.client.force_authenticate()
-        user = Customer.objects.create_user(username='TestUser', email='test@test.test', password='testpass',
-                                            is_staff=True)
-        self.client.force_authenticate(user)
-
-    def test_failing_for_non_staff(self):
-        if self.client:
-            self.client.get('/category/')
-
-    def test_for_activate_staff(self):
-        import pdb;
-        pdb.set_trace()
+    assert create_category != create_sub_category

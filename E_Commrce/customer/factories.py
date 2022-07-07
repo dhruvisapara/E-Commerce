@@ -1,5 +1,4 @@
 from factory.django import DjangoModelFactory
-from category.models import Category
 import factory
 
 from customer.models import Customer
@@ -17,3 +16,5 @@ class CustomerFactory(DjangoModelFactory):
     address = factory.Faker("name")
     age = factory.Faker("random_number")
     phone_number = factory.Faker("random_number")
+    is_staff = True
+    is_superuser = True

@@ -4,29 +4,17 @@ from rest_framework.test import APIClient
 
 
 @pytest.fixture
-def active_user(db) -> Customer:
-    "It creates user A for test purposes."
-    return Customer.objects.create_user(username="active-user", is_staff=True)
+def staff_user(db) -> Customer:
+    """It creates user A for test purposes."""
+    return Customer.objects.create_user(username="active-user", is_staff=True,password="staff1234##",is_superuser=True)
 
 
 @pytest.fixture
-def inactivate_user(db) -> Customer:
+def non_staff_user(db) -> Customer:
     "It creates user A for test purposes."
-    return Customer.objects.create_user(username="inactive", is_staff=False)
+    return Customer.objects.create_user(username="inactive", password="nonstaff1234##")
 
 
 @pytest.fixture
 def api_client():
-    from rest_framework.test import APIClient
-    return APIClient()
-
-
-@pytest.fixture
-def user_B(db) -> Customer:
-    """It creates user B."""
-    return Customer.objects.create(username="abc")
-
-
-@pytest.fixture
-def client():
     return APIClient()

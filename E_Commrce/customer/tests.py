@@ -1,9 +1,7 @@
-
-
-class TestUserViewSet:
-    endpoint = '/user/'
-
-    def test_list(self, client):
-        client.force_authenticate(user=client)
-        response = client.get(self.endpoint)
-        return response
+# class TestUserViewSet:
+#     endpoint = '/user/'
+#
+#     def test_list(self, api_client):
+#         api_client.force_authenticate(user=api_client)
+#         response = api_client.get()
+#         return response

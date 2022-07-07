@@ -1,11 +1,13 @@
 from rest_framework import serializers
-from pdb import set_trace as pdb
+
+from category.models import Category
 
 
-def validate_user(value):
-    print(value)
-    import pdb;
-    pdb.set_trace()
-    # if value != 1:
+def validate_categories(value):
+    """
+        This should validate that category is not already registered.
+    """
+    if Category.objects.filter(categories=value).exists():
+        raise serializers.ValidationError("This category is already existed.")
 
-        # raise serializers.ValidationError("Only super admin can add category.")
+    return value
