@@ -1,0 +1,22 @@
+[run]
+omit=
+    manage.py
+    category/migrations/*
+    products/migrations/*
+    order/migrations/*
+    cart/migrations/*
+    E_Commrce/*
+    address/migrations/*
+    tag/migrations/*
+    tag/admin.py
+    address/admin.py
+    address/apps.py
+    address/models.py
+    address/serializers.py
+    address/urls.py
+    category/admin.py
+    category/apps.py
+    category/serializers.py
+    category/urls.py
+
+

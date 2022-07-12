@@ -1,4 +1,5 @@
 pytest_plugins = [
    "category.fixtures",
-   "customer.fixtures"
+   "customer.fixtures",
+   "products.fixtures"
 ]

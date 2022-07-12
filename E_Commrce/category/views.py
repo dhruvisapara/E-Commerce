@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from E_Commrce.mixin import CustomRenderer
 from category.models import Category
 from category.serializers import CategorySerializer, CatSerializer
 from E_Commrce.permission import StaffPermission, SuperUserPermission
@@ -19,7 +20,7 @@ class CategoryView(ModelViewSet):
 
     serializer_class = CategorySerializer
     permission_classes = [
-        StaffPermission,SuperUserPermission
+        StaffPermission, SuperUserPermission
     ]
     # pagination_class = CustomPagination
     queryset = Category.objects.all()

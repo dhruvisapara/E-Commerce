@@ -12,7 +12,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [StaffPermission, ModificationPermission]
-    filter_class = ProductFilter
+    # filter_class = ProductFilter
     filterset_fields = ["brand", "name", "is_bestseller", "products_tags__tag", "category__categories",
                         "user__username"]
     search_fields = ["name", "brand", "category__categories", "user__username", "is_featured", "is_bestseller"]

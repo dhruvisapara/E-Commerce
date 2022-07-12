@@ -11,7 +11,7 @@ def staff_user(db) -> Customer:
 
 @pytest.fixture
 def non_staff_user(db) -> Customer:
-    "It creates user A for test purposes."
+    """It creates user A for test purposes."""
     return Customer.objects.create_user(username="inactive", password="nonstaff1234##")
 
 

@@ -1,3 +1,5 @@
+import random
+
 from factory.django import DjangoModelFactory
 import factory
 
@@ -12,7 +14,7 @@ class CustomerFactory(DjangoModelFactory):
     username = factory.Faker("name")
     password = 'setpassword1234'
     birth_date = factory.Faker("date")
-    gender = factory.Faker('random_choices', elements=[x[1] for x in GENDER])
+    gender = random.choice([x[1] for x in GENDER])
     address = factory.Faker("name")
     age = factory.Faker("random_number")
     phone_number = factory.Faker("random_number")

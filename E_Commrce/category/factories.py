@@ -4,7 +4,7 @@ import factory
 from customer.factories import CustomerFactory
 
 
-class CategoryFactory(DjangoModelFactory):
+class SubCaegoryFactory(DjangoModelFactory):
     class Meta:
         model = Category
 
@@ -13,7 +13,7 @@ class CategoryFactory(DjangoModelFactory):
     user = factory.SubFactory(CustomerFactory)
 
 
-class SubCaegoryFactory(DjangoModelFactory):
+class CategoryFactory(DjangoModelFactory):
     class Meta:
         model = Category
 

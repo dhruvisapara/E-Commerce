@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from rest_framework.serializers import (HyperlinkedModelSerializer,
                                         ModelSerializer)
-
 from category.models import Category
 from products.serializers import ProductSerializer
 
@@ -15,7 +14,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(ModelSerializer):
-    sub_categories = SubCategorySerializer(many=True)
+    sub_categories = SubCategorySerializer(many=True,required=False)
     id = serializers.IntegerField(required=False)
     product = ProductSerializer(read_only=True,many=True)
 
@@ -33,23 +32,24 @@ class CategorySerializer(ModelSerializer):
 
     def create(self, validated_data) -> Category:
         """
-            This should create subcategories with categories using writable nested serializer.
+            It should create subcategories with categories using writable nested serializer.
         """
-        sub_categories = validated_data.pop("sub_categories")
+        sub_categories = validated_data.get("sub_categories")
         validated_data["user"] = self.context["request"].user
         parent = super(CategorySerializer, self).create(validated_data)
 
-        for sub_category in sub_categories:
-            sub_category["parent"] = parent.id
-            sub_cat_serializer = SubCategorySerializer(data=sub_category)
-            sub_cat_serializer.is_valid(raise_exception=True)
-            sub_cat_serializer.save()
+        if sub_categories:
+            for sub_category in sub_categories:
+                sub_category["parent"] = parent.id
+                sub_cat_serializer = SubCategorySerializer(data=sub_category)
+                sub_cat_serializer.is_valid(raise_exception=True)
+                sub_cat_serializer.save()
 
         return parent
 
     def update(self, instance, validated_data) -> Category:
         """
-            This should update existing categories,subcategories and add new subcategories at a time.
+            It should update existing categories,subcategories and add new subcategories at a time.
         """
         sub_categories = validated_data.pop("sub_categories")
         instance = super(CategorySerializer, self).update(instance, validated_data)
