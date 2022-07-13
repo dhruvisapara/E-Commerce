@@ -11,6 +11,7 @@ class SubCaegoryFactory(DjangoModelFactory):
     categories = factory.Faker("name")
     description = factory.Faker("name")
     user = factory.SubFactory(CustomerFactory)
+    parent = None
 
 
 class CategoryFactory(DjangoModelFactory):
@@ -20,3 +21,4 @@ class CategoryFactory(DjangoModelFactory):
     categories = factory.Faker("name")
     description = factory.Faker("name")
     user = factory.SubFactory(CustomerFactory)
+    parent = factory.SubFactory(SubCaegoryFactory)

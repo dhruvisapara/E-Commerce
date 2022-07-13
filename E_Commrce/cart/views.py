@@ -24,6 +24,7 @@ class CartView(ModelViewSet):
         """
             This queryset should only display carts that are not ordered.
         """
+
         orders = Order.objects.all()
         cart_order = Cart.objects.exclude(cart_order__id__in=orders)
         return cart_order

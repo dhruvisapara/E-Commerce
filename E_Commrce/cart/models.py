@@ -2,7 +2,6 @@ from django.db import models
 from E_Commrce.settings import AUTH_USER_MODEL
 from products.models import Products
 from django_extensions.db.models import ActivatorModel
-from pdb import set_trace as pdb
 
 
 class Cart(ActivatorModel):

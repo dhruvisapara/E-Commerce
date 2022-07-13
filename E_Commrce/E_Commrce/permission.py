@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class StaffPermission(BasePermission):
@@ -17,6 +17,7 @@ class SuperUserPermission(BasePermission):
         """
                This permission is only for superuser.
         """
+
         return request.user.is_superuser
 
 
@@ -24,7 +25,13 @@ class ModificationPermission(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         """only user can update or delete their cart."""
-        return obj.user_id == request.user
+        if request.user:
+            if obj.user == request.user:
+                return True
+            else:
+                return obj.user == request.user
+        else:
+            return False
 
 
 class UserBusinessPermission(BasePermission):

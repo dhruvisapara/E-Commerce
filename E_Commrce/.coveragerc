@@ -1,22 +1,35 @@
 [run]
 omit=
     manage.py
+    E_Commrce/*
     category/migrations/*
+    customer/migrations/*
     products/migrations/*
     order/migrations/*
     cart/migrations/*
-    E_Commrce/*
     address/migrations/*
     tag/migrations/*
     tag/admin.py
-    address/admin.py
-    address/apps.py
-    address/models.py
-    address/serializers.py
-    address/urls.py
     category/admin.py
+    address/admin.py
+    cart/admin.py
+    products/admin.py
+    address/apps.py
     category/apps.py
-    category/serializers.py
+    cart/apps.py
+    products/apps.py
+    address/urls.py
     category/urls.py
+    products/urls.py
+    category/__init__.py
+    order/__init__.py
+    tag/__init__.py
+    utils/constant.py
+    utils/__init__.py
+    address/__init__.py
+    cart/__init__.py
 
-
+include=
+    category/test_category.py
+    products/test_products.py
+    customer/tests.py

@@ -62,7 +62,6 @@ class OrderSerializer(ModelSerializer):
             currency="usd",
             payment_method_types=["card"]
         )
-        print(response)
         return product
 
     def validate(self, data) -> dict:
