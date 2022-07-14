@@ -7,7 +7,6 @@ from category.models import Category
 @pytest.fixture
 def create_category(db) -> Category:
     request = CategoryFactory.create()
-
     return request
 
 

@@ -29,7 +29,3 @@ omit=
     address/__init__.py
     cart/__init__.py
 
-include=
-    category/test_category.py
-    products/test_products.py
-    customer/tests.py

@@ -1,38 +1,33 @@
-import pytest
-from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_204_NO_CONTENT
+from rest_framework.status import (HTTP_200_OK, HTTP_201_CREATED,
+                                   HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED)
 
-from category.fixtures import create_category
 from products.filters import ProductFilter
-from products.fixtures import product_creation
 from products.models import Products
 
 BASE_URL = "/api/v1/products/"
 SEARCH_COUNT = 1
 DELETE_COUNT = 0
-
+PRODUCT_PAYLOAD = dict()
 
 
 class TestProductList:
     def setUp(self, product_creation, create_category):
+        self.product_payload = {
+            "name": product_creation.name,
+            "price": product_creation.price,
+            "brand": product_creation.brand,
+            "new_price": product_creation.new_price,
+            "old_price": product_creation.old_price,
+            "quantity": product_creation.quantity,
+            "user": product_creation.user.id,
+            "is_bestseller": product_creation.is_bestseller,
+            "is_featured": product_creation.is_featured,
+            "created_at": product_creation.created_at,
+            "updated_at": product_creation.updated_at,
+            "product": create_category.pk
+        }
 
-        self.product_payload = [
-            {
-                "name": product_creation.name,
-                "price": product_creation.price,
-                "brand": product_creation.brand,
-                "new_price": product_creation.new_price,
-                "old_price": product_creation.old_price,
-                "quantity": product_creation.quantity,
-                "user": product_creation.user.id,
-                "is_bestseller": product_creation.is_bestseller,
-                "is_featured": product_creation.is_featured,
-                "created_at": product_creation.created_at,
-                "updated_at": product_creation.updated_at,
-                "product": create_category.id
-            }
-        ]
-        PRODUCT_PAYLOAD = self.product_payload
-        return PRODUCT_PAYLOAD
+        return PRODUCT_PAYLOAD.update(self.product_payload)
 
     def test_for_unauthorized_user(self, api_client):
         """
@@ -50,36 +45,26 @@ class TestProductList:
         response = api_client.get(BASE_URL)
         assert response.status_code == HTTP_200_OK
 
-    # @pytest.mark.parametrize('abc', PRODUCT_PAYLOAD)
-    def test_create_product(self, api_client, product_creation, create_category, abc):
+    """If pass payload data into parameter than that test case will be going to failed."""
+
+    def test_create_product(self, api_client, product_creation, create_category):
         """
         It should test post API of products.
         """
-        # product_payload = {
-        #     "name": product_creation.name,
-        #     "price": product_creation.price,
-        #     "brand": product_creation.brand,
-        #     "new_price": product_creation.new_price,
-        #     "old_price": product_creation.old_price,
-        #     "quantity": product_creation.quantity,
-        #     "user": product_creation.user.id,
-        #     "is_bestseller": product_creation.is_bestseller,
-        #     "is_featured": product_creation.is_featured,
-        #     "created_at": product_creation.created_at,
-        #     "updated_at": product_creation.updated_at,
-        #     "product": create_category.id
-        # }
         api_client.force_authenticate(product_creation.user)
-        response = api_client.post(BASE_URL, data=abc, format='json')
+        self.setUp(product_creation, create_category)
+        data_count = Products.objects.all().count()
+        response = api_client.post(BASE_URL, data=PRODUCT_PAYLOAD, format='json')
+        final_data_count = Products.objects.all().count()
         response.json().pop('id')
         assert response.status_code == HTTP_201_CREATED
-        # assert response.json() == product_payload
+        assert final_data_count == data_count + 1
 
     def test_update_category(self, api_client, product_creation, create_category, staff_user):
         """
         It should test update API of products.
         """
-        api_client.force_authenticate(staff_user)
+        api_client.force_authenticate(product_creation.user)
         response = api_client.put('/api/v1/products/' + str(product_creation.pk) + "/", {
             'name': 'TEST title',
             'price': 788,
@@ -94,6 +79,8 @@ class TestProductList:
         }, format='json')
         assert response.status_code == HTTP_200_OK
 
+        # assert self.has_object_permission(self.request, self.view, product_creation.user) == True
+
     def test_delete_product(self, product_creation, api_client):
         """
         It should test delete API for product.
@@ -101,7 +88,7 @@ class TestProductList:
         api_client.force_authenticate(product_creation.user)
 
         response = api_client.delete(
-            '/api/v1/products/' + str(product_creation.id) + "/"
+            '/api/v1/products/' + str(product_creation.pk) + "/"
         )
         response_data_count = len(response.content)
 

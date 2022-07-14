@@ -12,6 +12,9 @@ class CustomerFactory(DjangoModelFactory):
         model = Customer
 
     username = factory.Faker("name")
+    email = 'dhruvi.sapara@trootech.com'
+    first_name = factory.Faker("name")
+    last_name = factory.Faker("name")
     password = 'setpassword1234'
     birth_date = factory.Faker("date")
     gender = random.choice([x[1] for x in GENDER])

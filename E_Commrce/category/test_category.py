@@ -1,8 +1,9 @@
 import json
 from typing import Union
 
-from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, \
-    HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
+from rest_framework.status import (HTTP_200_OK, HTTP_201_CREATED,
+                                   HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST,
+                                   HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN)
 
 from category.filters import Searchfilter
 from category.models import Category
@@ -11,8 +12,9 @@ from category.views import CategoryView
 
 BASE_URL1 = '/api/v1/category/'
 BASE_URL2 = '/api/v2/category/'
-SEARCH_COUNT=1
-DELETE_COUNT=0
+SEARCH_COUNT = 1
+DELETE_COUNT = 0
+
 
 class TestCategoryCreation:
 
@@ -26,7 +28,6 @@ class TestCategoryCreation:
             "description": create_sub_category.description,
             "parent": create_category.id,
         }]
-
         category_payload = {
             "categories": create_category.categories,
             "description": create_category.description,
@@ -84,7 +85,7 @@ class TestCategoryList:
         response = api_client.get(BASE_URL1)
         assert response.status_code == HTTP_200_OK
 
-    def test_for_staff(self, api_client, staff_user):
+    def test_for_staff_user(self, api_client, staff_user):
         """
         It should return success code for staff user.
         """
@@ -92,7 +93,7 @@ class TestCategoryList:
         response = api_client.get(BASE_URL1)
         assert response.status_code == HTTP_200_OK
 
-    def test_for_non_staff(self, non_staff_user, api_client):
+    def test_for_non_staff_user(self, non_staff_user, api_client):
         """
         It should give status code for non_staff user
         """

@@ -1,10 +1,9 @@
-from typing import Any
-
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueValidator
-from customer.models import Customer, Business
+
+from customer.models import Business, Customer
 from customer.validations import validate_company_name, validate_revenue
 
 

@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from E_Commrce.permission import StaffPermission
+from E_Commrce.permission import StaffPermission, ModificationPermission
 from products.models import Products
 from products.serializers import ProductSerializer
 
@@ -9,8 +9,7 @@ from products.serializers import ProductSerializer
 class ProductViewSet(ModelViewSet):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [StaffPermission]
-    # permission_classes = [ModificationPermission]commented for testcases
+    permission_classes = [StaffPermission,ModificationPermission]
     # filter_class = ProductFilter
     filterset_fields = ["brand", "name", "is_bestseller", "products_tags__tag", "category__categories",
                         "user__username"]
