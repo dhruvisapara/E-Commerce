@@ -18,7 +18,7 @@ class CartView(ModelViewSet):
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
     permission_classes = [ModificationPermission]
-    renderer_classes = [CustomRenderer]
+    # renderer_classes = [CustomRenderer]Due to Test cases
 
     def get_queryset(self) -> QuerySet:
         """

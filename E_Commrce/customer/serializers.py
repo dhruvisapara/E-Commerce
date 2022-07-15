@@ -76,7 +76,7 @@ class BusinessUserSerializer(ModelSerializer):
         model = Business
         fields = "__all__"
 
-    def create(self, validated_data) -> object:
+    def create(self, validated_data) -> Business:
         """
             It should create current user as business user.
         """
@@ -86,7 +86,7 @@ class BusinessUserSerializer(ModelSerializer):
 
 class StaffMembersSerializer(ModelSerializer):
     staff_members = CustomerSerializer(many=True)
-    id = serializers.IntegerField(required=False)
+    id = serializers.IntegerField(required=True)
     company_name = serializers.SerializerMethodField()
     username = serializers.CharField(read_only=True)
 
@@ -99,7 +99,6 @@ class StaffMembersSerializer(ModelSerializer):
         """
         It should validate that manager must register the least one company
         """
-
         if not Business.objects.filter(business_customer_id=data["id"]).exists():
             raise serializers.ValidationError(
                 "You dont registered any company yet." "First register yor company."
@@ -111,11 +110,12 @@ class StaffMembersSerializer(ModelSerializer):
             Now manager add multiple staff members using writable nested serializer.
             For generated staff members parent will be manager(current user)
         """
+
         staff_members = validated_data.pop("staff_members")
         manager = super(StaffMembersSerializer, self).create(validated_data)
 
         for staff_member in staff_members:
-            staff_member["manager"] = manager.id
+            staff_member["manager"] = validated_data['id']
             staff_serializer = CustomerSerializer(data=staff_member)
             staff_serializer.is_valid(raise_exception=True)
             staff_serializer.save()
@@ -126,13 +126,12 @@ class StaffMembersSerializer(ModelSerializer):
         """
         manager can create and update and destroy staff members.
         """
+
         staff_members = validated_data.pop("staff_members")
         instance = super(StaffMembersSerializer, self).update(instance, validated_data)
-
         for staff_member in staff_members:
 
             if "id" in staff_member:
-
                 if Customer.objects.filter(id=staff_member["id"]).exists():
                     staff = Customer.objects.get(id=staff_member["id"])
                     staff.username = staff_member.get("username", staff.username)
@@ -165,6 +164,6 @@ class StaffMembersSerializer(ModelSerializer):
         return instance
 
     def get_company_name(self, obj) -> dict:
-        user = Business.objects.filter(business_customer=obj.manager.id)
+        user = Business.objects.filter(business_customer=obj)
         serializer = BusinessUserSerializer(instance=user, many=True)
         return serializer.data
