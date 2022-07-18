@@ -31,7 +31,7 @@ def send_email_task():
 
 @shared_task()
 def mail_about_business_for_admin():
-    business_user = Business.objects.filter().last()
+    business_user = Business.objects.all().first()
     mail_subject = " New Business Registration"
     message = (
         "Hello Admin ,This mail regarding new business registration Please check the company details./"

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import (HyperlinkedModelSerializer,
                                         ModelSerializer)
 from category.models import Category
+from category.validations import validate_categories
 from products.serializers import ProductSerializer
 
 
@@ -14,9 +15,9 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(ModelSerializer):
-    sub_categories = SubCategorySerializer(many=True,required=False)
+    sub_categories = SubCategorySerializer(many=True, required=False)
     id = serializers.IntegerField(required=False)
-    product = ProductSerializer(read_only=True,many=True)
+    product = ProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Category
@@ -79,3 +80,10 @@ class CatSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "url", "categories"]
+
+
+class CategoryValidation(ModelSerializer):
+    categories = serializers.CharField(validators=[validate_categories])
+    class Meta:
+        model = Category
+        fields = ["id", 'categories']

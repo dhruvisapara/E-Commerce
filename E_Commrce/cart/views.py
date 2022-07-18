@@ -6,7 +6,6 @@ from rest_framework.viewsets import ModelViewSet
 
 from cart.models import Cart, CartItem
 from cart.serializers import CartItemSerializer, CartSerializer
-from E_Commrce.mixin import CustomRenderer
 from E_Commrce.permission import ModificationPermission
 from order.models import Order
 

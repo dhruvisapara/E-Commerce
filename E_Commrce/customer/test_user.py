@@ -8,6 +8,7 @@ from rest_framework.test import APITestCase
 
 from customer.factories import CustomerFactory
 from customer.models import Customer, Business
+from customer.tasks import send_email_task, mail_about_business_for_admin
 
 TOKEN_URL = "/api/v1/get_token/"
 BASE_URL = "/api/v1/register/"
@@ -123,7 +124,7 @@ class TestBusinessUserAPI:
             "company_name": "trootech",
             "phone_number": "9999999999",
             "company_email": register_business.company_email,
-            "revenue": register_business.revenue,
+            "revenue": 60000.00,
             "Year_of_Establishment": "23-03-2015",
             "product_category": "somethig",
             "company_profile": register_business.company_profile,
@@ -244,3 +245,21 @@ class TestStaffUser:
         user = response.json().get("results")
         assert response.status_code == HTTP_200_OK
         assert user[0]["username"] == register_business.business_customer.username
+
+
+class TestCeleryUser:
+    def test_celery_new_usrer(self,api_client,staff_user):
+        """Test for check celery send mail after creating new user."""
+        task_handle = send_email_task.delay()
+        result = task_handle.get()
+        message = "done"
+
+        assert result == message
+
+    def test_celery_business_user(self,register_business,api_client):
+        """Test for check celery send mail whenever new business is registered."""
+        business_task = mail_about_business_for_admin.delay()
+        result = business_task.get()
+        success_message = "done"
+
+        assert result == success_message

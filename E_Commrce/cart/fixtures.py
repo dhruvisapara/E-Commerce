@@ -16,3 +16,7 @@ def cart_item_creation(db) -> CartItem:
     """It should return created factory data for cartitem model."""
     request = CartItemFactory.create()
     return request
+@pytest.fixture
+def update_cart_item(db) -> CartItem:
+    request = CartItemFactory.create()
+    return request

@@ -42,6 +42,7 @@ class CartSerializer(ModelSerializer):
             "carts",
             "get_total_cost",
             "get_total_items",
+            "user"
         ]
 
     # def validate_get_total_cost(data) -> None:

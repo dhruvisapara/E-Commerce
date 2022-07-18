@@ -2,11 +2,12 @@ from typing import Any
 
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from category.models import Category
-from category.serializers import CategorySerializer, CatSerializer
+from category.serializers import CategorySerializer, CatSerializer, CategoryValidation
 from E_Commrce.permission import StaffPermission, SuperUserPermission
 from products.models import Products
 
@@ -60,3 +61,8 @@ class CategoryView(ModelViewSet):
     def category_product(self, request, pk):
         response = Products.objects.filter(category__id=pk)
         return Response(response)
+
+
+class CategoryValidationView(CreateAPIView):
+    serializer_class = CategoryValidation
+    queryset = Category.objects.all()

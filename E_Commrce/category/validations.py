@@ -10,4 +10,4 @@ def validate_categories(value):
     if Category.objects.filter(categories=value).exists():
         raise serializers.ValidationError("This category is already existed.")
 
-    return value
+    # return value

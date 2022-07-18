@@ -1,6 +1,6 @@
 import json
 from typing import Union
-
+import pytest
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -17,6 +17,7 @@ from category.views import CategoryView
 
 BASE_URL1 = "/api/v1/category/"
 BASE_URL2 = "/api/v2/category/"
+VALIDATION_URL='/api/v1/category_validation/'
 SEARCH_COUNT = 1
 DELETE_COUNT = 0
 
@@ -114,6 +115,13 @@ class TestCategoryList:
         response = api_client.get(BASE_URL1)
         assert response.status_code == HTTP_403_FORBIDDEN
 
+    def test_get_form_display_all_content(self, api_client, create_category):
+        api_client.force_authenticate(create_category.user)
+        response = api_client.get(BASE_URL1 + "?page_size=all")
+        category_count = Category.objects.all().count()
+        assert HTTP_200_OK == response.status_code
+        assert category_count > 1
+
     def test_check_any_matching_category(self, create_category, create_sub_category):
         """
         It should test that any existing category is there.
@@ -187,3 +195,23 @@ class TestSearchFilterCategory:
         assert response.status_code == HTTP_200_OK
         assert category_filter.is_valid()
         assert category_filter.qs.count() == 1
+
+
+class TestCategoryValidation:
+    def test_post_form_validation(self, api_client, staff_user):
+        api_client.force_authenticate(staff_user)
+        category_creation = Category.objects.create(categories="CLOTH", description="ABCD")
+        payload_data = {
+            "categories": category_creation.categories,
+            "description": "ABCD",
+            "sub_categories": [
+                {
+                    "categories": "tunic",
+                    "description": "ghjk",
+                },
+            ]
+        }
+        response=api_client.post(VALIDATION_URL,data=payload_data)
+        validation_error=response.json().get('categories')[0]
+        sub_string=' already existed.'
+        assert sub_string in validation_error
