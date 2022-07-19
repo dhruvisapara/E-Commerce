@@ -2,7 +2,6 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 from E_Commrce.settings import AUTH_USER_MODEL
-from pdb import set_trace as pdb
 
 
 class Address(models.Model):

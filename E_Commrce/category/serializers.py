@@ -11,12 +11,15 @@ class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ("id", "categories", "description", "parent")
+        # extra_kwargs = {
+        #     "parent": {"read_only": True},
+        # }
 
 
 class CategorySerializer(ModelSerializer):
-    sub_categories = SubCategorySerializer(many=True,required=False)
+    sub_categories = SubCategorySerializer(many=True, required=False)
     id = serializers.IntegerField(required=False)
-    product = ProductSerializer(read_only=True,many=True)
+    product = ProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Category
@@ -34,17 +37,16 @@ class CategorySerializer(ModelSerializer):
         """
             It should create subcategories with categories using writable nested serializer.
         """
-        sub_categories = validated_data.get("sub_categories")
-        validated_data["user"] = self.context["request"].user
-        parent = super(CategorySerializer, self).create(validated_data)
 
+        sub_categories = validated_data.pop("sub_categories")
+        validated_data["user"] = self.context["request"].user
+        parent = super().create(validated_data)
         if sub_categories:
             for sub_category in sub_categories:
                 sub_category["parent"] = parent.id
                 sub_cat_serializer = SubCategorySerializer(data=sub_category)
                 sub_cat_serializer.is_valid(raise_exception=True)
                 sub_cat_serializer.save()
-
         return parent
 
     def update(self, instance, validated_data) -> Category:
@@ -64,8 +66,8 @@ class CategorySerializer(ModelSerializer):
                         "description", sub_cat.description
                     )
                     sub_cat.save()
-                else:
-                    continue
+                # else:
+                #     continue
 
             else:
                 sub_cat = Category.objects.create(**sub_category, parent=instance)

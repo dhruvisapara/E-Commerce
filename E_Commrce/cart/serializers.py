@@ -42,6 +42,7 @@ class CartSerializer(ModelSerializer):
             "carts",
             "get_total_cost",
             "get_total_items",
+            "user"
         ]
 
     # def validate_get_total_cost(data) -> None:
@@ -80,11 +81,10 @@ class CartSerializer(ModelSerializer):
                     item.product = cart_items.get("product", item.product)
                     item.quantity = cart_items.get("quantity", item.quantity)
                     item.save()
-                else:
-                    continue
+                # else:
+                #     continue
             else:
                 item = CartItem.objects.create(**cart_items, cart_item=instance)
-                # sub_cat = super(CategorySerializer, self).create(validated_data)
                 item.save()
 
         return instance

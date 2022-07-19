@@ -10,3 +10,7 @@ def product_creation(db) -> Products:
     request = ProductFactory.create()
     return request
 
+@pytest.fixture
+def sub_product_creation(db) -> Products:
+    request = ProductFactory.create()
+    return request

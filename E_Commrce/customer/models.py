@@ -68,12 +68,6 @@ class Customer(AbstractUser):
                                                   last_name=self.last_name,
                                                   )
 
-    def is_exists(self):
-        """To check by email that user is existed or not"""
-        if Customer.objects.filter(email=self.email):
-            return True
-        return False
-
 
 class Business(models.Model):
     phone_regex = RegexValidator(

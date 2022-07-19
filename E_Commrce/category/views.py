@@ -48,15 +48,15 @@ class CategoryView(ModelViewSet):
     #     serializer = self.serializer_class(items, many=True)
     #     return Response({"message": "successfully added.", "items": serializer.data})
 
-    @action(detail=False, methods=["post"])
-    def category_create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        self.get_paginated_response(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    @action(detail=True, methods=['get'])
-    def category_product(self, request, pk):
-        response = Products.objects.filter(category__id=pk)
-        return Response(response)
+    # @action(detail=False, methods=["post"])
+    # def category_create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     self.get_paginated_response(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #
+    # @action(detail=True, methods=['get'])
+    # def category_product(self, request, pk):
+    #     response = Products.objects.filter(category__id=pk)
+    #     return Response(response)

@@ -16,7 +16,10 @@ def create_sub_category(db) -> Category:
     """It should return  created sub factory data for category model."""
     sub_category = SubCaegoryFactory.create()
     return sub_category
-
+@pytest.fixture
+def updated_fixture(db) -> Category:
+    sub_category = SubCaegoryFactory.create()
+    return sub_category
 
 @pytest.fixture
 def update_category(staff_user, db) -> Category:

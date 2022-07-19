@@ -26,12 +26,13 @@ class TestCategoryCreation:
         """
         It should test that only superuser can create the category.
         """
+        api_client.force_authenticate(create_category.user)
         before_category_count = Category.objects.all().count()
         sub_categoey_payload = [
             {
                 "categories": create_sub_category.categories,
                 "description": create_sub_category.description,
-                "parent": create_category.id,
+                "parent": create_category.user.id,
             }
         ]
         category_payload = {
@@ -39,37 +40,62 @@ class TestCategoryCreation:
             "description": create_category.description,
             "sub_categories": sub_categoey_payload,
         }
-        api_client.force_authenticate(create_category.user)
-        response = api_client.post(BASE_URL1, data=category_payload)
+        response = api_client.post(BASE_URL1, data=category_payload, format='json')
         after_category_count = Category.objects.all().count()
         assert response.status_code == HTTP_201_CREATED
-        assert after_category_count == before_category_count + 1
+        assert after_category_count > before_category_count
 
-    def test_update_form_category(self, create_category, api_client):
-        """
-        It should test that category should update by only admin who created that category.
-        """
+    def test_update_category(self, create_category, create_sub_category, updated_fixture,api_client ):
         api_client.force_authenticate(create_category.user)
-        category = Category.objects.create(categories="CLOTH", description="ABCD")
 
-        updated_category = {
-            "categories": "Topwear",
-            "description": "ABCD",
-            "sub_categories": [
-                {
-                    "categories": "tunic",
-                    "description": "ghjk",
-                }
-            ],
+        sub_category_payload = [
+            {
+                "categories": create_sub_category.categories,
+                "description": create_sub_category.description,
+            }
+        ]
+        catgory_payload = {
+            "categories": create_category.categories,
+            "description": create_category.description,
+            "sub_categories": sub_category_payload
         }
-        response = api_client.put(
-            "/api/v1/category/" + str(category.pk) + "/",
-            data=updated_category,
-            format="json",
+        response = api_client.post(BASE_URL1, data=catgory_payload, format="json")
+        pk = response.json().get('id')
+        sub_category_pk = response.json().get('sub_categories')[0]['id']
+        updated_sub_category_payload = [
+            {
+                "id": sub_category_pk,
+                "categories": updated_fixture.categories,
+                "description": updated_fixture.description,
+            }
+
+        ]
+        updated_category = {
+            "categories": "Tops",
+            "description": "czvcvxvx",
+            "sub_categories": [{
+                "id": updated_sub_category_payload[0]['id'],
+                "categories": updated_sub_category_payload[0]['categories'],
+                "description": updated_sub_category_payload[0]['description'],
+            },
+                {
+                    "categories": "sewdwewvwv",
+                    "description": "wdvwsvwv",
+
+                }
+            ]
+        }
+
+        update_response = api_client.put(
+            BASE_URL1 + str(pk) + "/",
+            data=updated_category, format='json'
         )
-        updated_data = response.json().get("categories")
-        assert response.status_code == HTTP_200_OK
-        assert updated_data == "Topwear"
+        update_check=update_response.json().get('categories')
+
+        assert response.status_code == HTTP_201_CREATED
+        assert update_response.status_code == HTTP_200_OK
+        assert update_check == "Tops"
+
 
     def test_delete_form_category(self, create_category, api_client):
         api_client.force_authenticate(create_category.user)
@@ -141,6 +167,12 @@ class TestCategoryList:
         assert response.status_code == HTTP_200_OK
         assert response2.status_code == HTTP_200_OK
 
+    def test_get_form_display_all_content(self, api_client, create_category):
+        api_client.force_authenticate(create_category.user)
+        response = api_client.get(BASE_URL1+"?page_size=all")
+        category_count=Category.objects.all().count()
+        assert HTTP_200_OK == response.status_code
+        assert category_count > 1
 
 class TestSearchFilterCategory:
     def test_search_fields_for_category(self, api_client, create_category):
@@ -187,3 +219,5 @@ class TestSearchFilterCategory:
         assert response.status_code == HTTP_200_OK
         assert category_filter.is_valid()
         assert category_filter.qs.count() == 1
+
+

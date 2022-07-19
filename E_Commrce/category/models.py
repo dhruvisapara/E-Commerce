@@ -24,4 +24,5 @@ class Category(ActivatorModel):
 
     )
     tags = GenericRelation(TaggedItem, related_query_name="tag_category")
+    objects = models.Manager()
     name = CustomManger()

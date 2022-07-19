@@ -1,7 +1,7 @@
 [run]
 omit=
     manage.py
-    E_Commrce/*
+    E_Commrce/__init__.py
     category/migrations/*
     customer/migrations/*
     products/migrations/*
@@ -28,4 +28,5 @@ omit=
     utils/__init__.py
     address/__init__.py
     cart/__init__.py
+    order/signals.py
 
