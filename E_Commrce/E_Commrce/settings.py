@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 from datetime import timedelta
-from json import tool
+from django.utils.translation import gettext_lazy as _
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,6 +28,17 @@ DEBUG = True
 ALLOWED_HOSTS = []
 AUTH_USER_MODEL = "customer.Customer"
 # Application definition
+MIDDLEWARE = [
+
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,16 +62,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'treebeard'
 
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 # CELERY STUFF
@@ -195,12 +196,20 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh'
+LANGUAGES = [
+    ('fr', _('French')),
+    ('en', _('English')),
+    ('hi', _('Hindi')),
+    ('ur', _('Urdu')),
+    ('ar', _('Arabic')),
+    ('zh', _('Chinese')),
+]
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 ALLOWED_VERSIONS = 'v1',
 DEFAULT_VERSIONS = 'v1'
@@ -209,6 +218,7 @@ DEFAULT_VERSIONS = 'v1'
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

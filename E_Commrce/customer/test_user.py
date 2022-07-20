@@ -2,7 +2,7 @@ from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_401_UNAUTHORIZED,
-    HTTP_204_NO_CONTENT,
+    HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST,
 )
 from rest_framework.test import APITestCase
 
@@ -46,11 +46,30 @@ class RegisterUserTest(APITestCase):
             "first_name": self.first_name,
             "last_name": self.last_name,
         }
-        empty_customer_data = Customer.objects.all().count()
+        before_customer_data = Customer.objects.all().count()
         response = self.client.post(BASE_URL, data)
         created_customer = Customer.objects.all().count()
         self.assertEqual(response.status_code, HTTP_201_CREATED)
-        self.assertEqual(created_customer, empty_customer_data + 1)
+        self.assertEqual(created_customer, before_customer_data + 1)
+
+    # def test_password_not_match(self):
+    #     data = {
+    #         "username": "hello",
+    #         "password": self.password,
+    #         "password2": "hello123456",
+    #         "email": "hello@gmail.com",
+    #         "first_name": self.first_name,
+    #         "last_name": self.last_name,
+    #     }
+    #     before_customer_data = Customer.objects.all().count()
+    #     response = self.client.post(BASE_URL, data)
+    #     created_customer = Customer.objects.all().count()
+    #     data = response.json().get('password')[0]
+    #
+    #     error_message = "Password fields didn't match."
+    #     self.assertEqual(response.status_code, HTTP_400_BAD_REQUEST)
+    #     self.assertEqual(created_customer, before_customer_data)
+    #     self.assertEqual(data, error_message)
 
 
 class LoginUserTest(APITestCase):
@@ -170,7 +189,7 @@ class TestBusinessUserAPI:
         assert response.status_code == HTTP_200_OK
         assert user[0]["business_customer"] == register_business.business_customer.id
 
-    def test_staff_user(self, api_client, register_business):
+    def test_staff_user(self, api_client, register_business, staff_user):
         """
         Only registered business user can add staff members.
         """
@@ -195,16 +214,71 @@ class TestBusinessUserAPI:
                     "is_staff": 0,
                     "manager": register_business.business_customer.id,
                 }
-            ],
+                # {
+                #     "id": staff_user.pk,
+                #     "username": "amit",
+                #     "email": "amitshah@gmail.com",
+                #     "first_name": "amit",
+                #     "last_name": "shah",
+                #     "date_joined": "1992-04-21",
+                #     "birth_date": "18-03-1979",
+                #     "address": "Gujrat",
+                #     "gender": "male",
+                #     "phone_number": 1234567891,
+                #     "age": 45,
+                #     "password": "amit1234##",
+                #     "password2": "amit1234##",
+                #     "is_staff": 0,
+                #     "manager": register_business.business_customer.id,
+                # }
+            ]
         }
         response = api_client.put(
             STAFF_REGISTRATION + str(register_business.business_customer.pk) + "/",
-            data=data,
-            format="json",
+            data=data, format='json'
         )
         after_customer_data = Customer.objects.all().count()
         assert response.status_code == HTTP_200_OK
-        assert after_customer_data == before_customer_data + 1
+        assert after_customer_data > before_customer_data
+
+    def test_not_register_company_validation_staff_user(self, api_client, staff_user):
+        """
+        Only registered business user can add staff members.
+        """
+        before_customer_data = Customer.objects.all().count()
+        api_client.force_authenticate(staff_user)
+        data = {
+            "id": staff_user.pk,
+            "staff_members": [
+                {
+                    "username": "yogi",
+                    "email": "yogi@gmail.com",
+                    "first_name": "yo",
+                    "last_name": "aadityanath",
+                    "date_joined": "1992-04-21",
+                    "birth_date": "18-03-1979",
+                    "address": "UttarPradesh",
+                    "gender": "male",
+                    "phone_number": 1234567891,
+                    "age": 45,
+                    "password": "yogi1234##",
+                    "password2": "yogi1234##",
+                    "is_staff": 0,
+                    "manager": staff_user.pk,
+                }]
+
+        }
+        response = api_client.put(
+            STAFF_REGISTRATION + str(staff_user.pk) + "/",
+            data=data, format='json'
+        )
+
+        error_message = "You dont registered any company yet.First register yor company."
+        after_customer_data = Customer.objects.all().count()
+        response_message = response.json().get('id')[0]
+        assert response.status_code == HTTP_400_BAD_REQUEST
+        assert after_customer_data == before_customer_data
+        assert error_message == response_message
 
 
 class TestStaffUser:
@@ -241,6 +315,109 @@ class TestStaffUser:
         response = api_client.get(
             STAFF_REGISTRATION, data=STAFF_USER_PAYLOAD, format="json"
         )
+
         user = response.json().get("results")
         assert response.status_code == HTTP_200_OK
         assert user[0]["username"] == register_business.business_customer.username
+
+
+class TestCheckPassword(APITestCase):
+    username = "django"
+    password = "1234pass"
+    password2 = "1234pass"
+    first_name = "good"
+    last_name = "luck"
+    email = "dhruvi@trootech.com"
+
+    def setUp(self):
+        self.user = Customer.objects.create_user(
+            username=self.username,
+            password=self.password,
+            first_name=self.first_name,
+            email=self.email,
+            last_name=self.last_name,
+        )
+
+    def test_password_not_match(self):
+        data = {
+            "username": "hello",
+            "password": self.password,
+            "password2": "hello123456",
+            "email": "hello@gmail.com",
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+        }
+        before_customer_data = Customer.objects.all().count()
+        response = self.client.post(BASE_URL, data)
+        created_customer = Customer.objects.all().count()
+        data = response.json().get('password')[0]
+
+        error_message = "Password fields didn't match."
+        self.assertEqual(response.status_code, HTTP_400_BAD_REQUEST)
+        self.assertEqual(created_customer, before_customer_data)
+        self.assertEqual(data, error_message)
+
+
+class TestUpdateStaffUser:
+    def test_update_staff_user(self, api_client, register_business, staff_user):
+        """
+        Only registered business user can add staff members.
+        """
+        before_customer_data = Customer.objects.all().count()
+        api_client.force_authenticate(register_business.business_customer)
+        data = {
+            "id": register_business.business_customer.id,
+            "staff_members": [
+                {
+                    "username": "yogi",
+                    "email": "yogi@gmail.com",
+                    "first_name": "yo",
+                    "last_name": "aadityanath",
+                    "date_joined": "1992-04-21",
+                    "birth_date": "18-03-1979",
+                    "address": "UttarPradesh",
+                    "gender": "male",
+                    "phone_number": 1234567891,
+                    "age": 45,
+                    "password": "yogi1234##",
+                    "password2": "yogi1234##",
+                    "is_staff": 0,
+                    "manager": register_business.business_customer.id,
+                }
+            ]
+        }
+        response = api_client.put(
+            STAFF_REGISTRATION + str(register_business.business_customer.pk) + "/",
+            data=data, format='json'
+        )
+        pk = response.json().get('id')
+        udated_data = {
+            "id": register_business.business_customer.id,
+            "staff_members": [
+
+                {
+                    "id": pk,
+                    "username": "amit",
+                    "email": "amitshah@gmail.com",
+                    "first_name": "amit",
+                    "last_name": "shah",
+                    "date_joined": "1992-04-21",
+                    "birth_date": "18-03-1979",
+                    "address": "Gujrat",
+                    "gender": "male",
+                    "phone_number": 1234567891,
+                    "age": 45,
+                    "password": "amit1234##",
+                    "password2": "amit1234##",
+                    "is_staff": 0,
+                    "manager": register_business.business_customer.id,
+                }
+            ]
+        }
+        updated_response = api_client.put(STAFF_REGISTRATION + str(register_business.business_customer.pk) + "/",
+                                          data=udated_data, format='json')
+
+        after_customer_data = Customer.objects.all().count()
+        assert response.status_code == HTTP_200_OK
+        assert after_customer_data > before_customer_data
+        assert updated_response.status_code == HTTP_200_OK
