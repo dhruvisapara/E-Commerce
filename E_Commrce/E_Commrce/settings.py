@@ -9,11 +9,13 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import os
 from datetime import timedelta
-from django.utils.translation import gettext_lazy as _
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.utils.translation import gettext
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -60,7 +62,9 @@ INSTALLED_APPS = [
     'celery',
     # 'django_celery_results',
     'django_extensions',
-    'treebeard'
+    'treebeard',
+    'drf_yasg',
+    'drf_spectacular',
 
 ]
 
@@ -137,12 +141,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DATE_INPUT_FORMATS': ["%d-%m-%Y", ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter'],
-
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'DEFAULT_RENDERER_CLASSES': [
@@ -164,6 +168,23 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'ecom_db',
+#         'USER': 'admin',
+#         'PASSWORD': 'my_db@123',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your Project API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}
 # DATABASE = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.posgresql_psycopg',
@@ -174,7 +195,25 @@ DATABASES = {
 #         'PORT': '5432',
 #     }
 # }
-
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Your App API - Swagger': {
+            'type': 'oauth2',
+            # 'authorizationUrl': '/yourapp/o/authorize',
+            'tokenUrl': 'http://127.0.0.1:8000/api/v1/get_token/',
+            'flow': 'accessCode',
+            'scopes': {
+                'read:groups': 'read groups',
+            }
+        }
+    },
+    'OAUTH2_CONFIG': {
+        'clientId': 'yourAppClientId',
+        'clientSecret': 'yourAppClientSecret',
+        'appName': 'your application name'
+    },
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -196,20 +235,20 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'zh'
-LANGUAGES = [
-    ('fr', _('French')),
-    ('en', _('English')),
-    ('hi', _('Hindi')),
-    ('ur', _('Urdu')),
-    ('ar', _('Arabic')),
-    ('zh', _('Chinese')),
-]
+LANGUAGE_CODE = 'en-us'
+# LANGUAGES = (
+#     ('en', gettext('English')),
+#     ('fr', gettext('French')),
+#     ('ar', gettext('Arabic')),
+# )
 
+# Contains the path list where Django should look into for django.po files for all supported languages
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 ALLOWED_VERSIONS = 'v1',
 DEFAULT_VERSIONS = 'v1'

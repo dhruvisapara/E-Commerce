@@ -1,14 +1,11 @@
 from typing import Any
 
-from rest_framework import status
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from category.models import Category
 from category.serializers import CategorySerializer, CatSerializer
 from E_Commrce.permission import StaffPermission, SuperUserPermission
-from products.models import Products
 
 
 class CategoryView(ModelViewSet):

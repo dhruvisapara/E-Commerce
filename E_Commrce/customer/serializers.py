@@ -80,16 +80,16 @@ class BusinessUserSerializer(ModelSerializer):
         """
             It should create current user as business user.
         """
-
         validated_data["business_customer"] = self.context["request"].user
         return Business.objects.create(**validated_data)
 
 
 class StaffMembersSerializer(ModelSerializer):
     staff_members = CustomerSerializer(many=True)
-    id = serializers.IntegerField(required=True,validators=[validate_id])
+    id = serializers.IntegerField(required=True, validators=[validate_id])
     company_name = serializers.SerializerMethodField()
     username = serializers.CharField(read_only=True)
+
     class Meta:
 
         model = Customer
@@ -167,4 +167,3 @@ class StaffMembersSerializer(ModelSerializer):
         user = Business.objects.filter(business_customer=obj)
         serializer = BusinessUserSerializer(instance=user, many=True)
         return serializer.data
-

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-20 13:10+0000\n"
+"POT-Creation-Date: 2022-07-21 15:30+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,38 +19,28 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: E_Commrce/settings.py:202
-msgid "French"
-msgstr ""
+#: customer/models.py:18
+msgid ""
+"Phone number must be entered in the format: '+999999999'. Up to 15 digits "
+"allowed."
+msgstr "vddv"
 
-#: E_Commrce/settings.py:203
-msgid "English"
-msgstr ""
-
-#: E_Commrce/settings.py:204
-msgid "Hindi"
-msgstr ""
-
-#: E_Commrce/settings.py:205
-msgid "Urdu"
-msgstr ""
-
-#: E_Commrce/urls.py:47
-msgid "news/"
-msgstr ""
-
-#: customer/models.py:26
+#: customer/models.py:24
 msgid "username"
-msgstr ""
+msgstr "اسم االمستخدم"
 
-#: customer/models.py:30
+#: customer/models.py:28
 msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-msgstr ""
+msgstr "مطلوب. 150 حرفًا أو أقل. أحرف وأرقام و @ /. / + / - / _ فقط."
 
-#: customer/models.py:34
+#: customer/models.py:32
 msgid "A user with that username already exists."
-msgstr ""
+msgstr "اسم المستخدم موجود مسبقا."
 
-#: customer/models.py:88
+#: customer/models.py:86
 msgid "email address"
-msgstr ""
+msgstr "عنوان البريد الالكترونى"
+
+#: customer/validations.py:11
+msgid "This company is already exists."
+msgstr "આ કંપની પહેલેથી જ અસ્તિત્વમાં છે."

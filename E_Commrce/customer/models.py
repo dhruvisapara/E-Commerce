@@ -4,21 +4,19 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from category.manager import CustomManger
 from utils.constant import (
     FEMALE,
     GENDER,
     BUISNESS_TYPE,
     B2B_COMPANIES
 )
-from pdb import set_trace as pdb
 
 
 class Customer(AbstractUser):
     phone_regex = RegexValidator(
         regex=r"^\+?1?\d{9,15}$",
-        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits "
-                "allowed.",
+        message=_("Phone number must be entered in the format: '+999999999'. Up to 15 digits "
+                  "allowed."),
     )
     username_validator = UnicodeUsernameValidator()
 
@@ -97,4 +95,3 @@ class Business(models.Model):
     company_profile = models.TextField()
     portfolio = models.IntegerField()
     objects = models.Manager()
-

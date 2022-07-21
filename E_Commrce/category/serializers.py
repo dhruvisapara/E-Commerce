@@ -37,7 +37,6 @@ class CategorySerializer(ModelSerializer):
         """
             It should create subcategories with categories using writable nested serializer.
         """
-
         sub_categories = validated_data.pop("sub_categories")
         validated_data["user"] = self.context["request"].user
         parent = super().create(validated_data)

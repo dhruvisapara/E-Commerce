@@ -8,10 +8,9 @@ def validate_company_name(value):
     """
         This is validates that company is not already registered.
     """
-
+    message = _("This company is already exists.")
     if Business.objects.filter(company_name=value).exists():
-        raise serializers.ValidationError(_("This company is exists."))
-
+        raise serializers.ValidationError(message)
     return value
 
 
