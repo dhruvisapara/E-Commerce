@@ -25,7 +25,6 @@ class CategoryView(ModelViewSet):
     ordering_fields = ['id', "tag"]
 
     # renderer_classes = [CustomRenderer,]
-
     def get_serializer_class(self) -> Any:
         if self.request.version == 'v1':
             return self.serializer_class
@@ -38,7 +37,6 @@ class CategoryView(ModelViewSet):
         response = super().list(self, request)
 
         return Response({'message': "successfully", 'result': response.data})
-
     # @action(detail=False, methods=['post'])
     # def all_queryset(self, request):
     #     items = self.query_set

@@ -1,0 +1,78 @@
+[
+  {
+    "model": "products.products",
+    "pk": 7,
+    "fields": {
+      "status": 1,
+      "activate_date": null,
+      "deactivate_date": null,
+      "name": "boots1",
+      "price": "500.000",
+      "user": 1,
+      "business_user": null,
+      "slug": "boots1",
+      "brand": "",
+      "old_price": "500.000",
+      "new_price": "700.000",
+      "is_bestseller": true,
+      "is_featured": false,
+      "quantity": 5,
+      "meta_keywords": "",
+      "meta_description": "",
+      "created_at": "2022-07-22T11:37:40.221Z",
+      "updated_at": "2022-07-22T11:37:40.221Z",
+      "category": []
+    }
+  },
+  {
+    "model": "products.products",
+    "pk": 8,
+    "fields": {
+      "status": 1,
+      "activate_date": null,
+      "deactivate_date": null,
+      "name": "boots2",
+      "price": "200.000",
+      "user": 1,
+      "business_user": null,
+      "slug": "boots2",
+      "brand": "",
+      "old_price": "500.000",
+      "new_price": "700.000",
+      "is_bestseller": true,
+      "is_featured": false,
+      "quantity": 5,
+      "meta_keywords": "",
+      "meta_description": "",
+      "created_at": "2022-07-22T11:37:40.221Z",
+      "updated_at": "2022-07-22T11:37:40.221Z",
+      "category": []
+    }
+  },
+  {
+
+    "model": "products.products",
+    "pk": 9,
+    "fields": {
+      "status": 1,
+      "activate_date": null,
+      "deactivate_date": null,
+      "name": "boots3",
+      "price": "1000.000",
+      "user": 1,
+      "business_user": null,
+      "slug": "boots3",
+      "brand": "",
+      "old_price": "500.000",
+      "new_price": "700.000",
+      "is_bestseller": true,
+      "is_featured": false,
+      "quantity": 5,
+      "meta_keywords": "",
+      "meta_description": "",
+      "created_at": "2022-07-22T11:37:40.222Z",
+      "updated_at": "2022-07-22T11:37:40.222Z",
+      "category": []
+    }
+  }
+]

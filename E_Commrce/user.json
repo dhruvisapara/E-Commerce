@@ -1,0 +1,74 @@
+[
+  {
+    "model": "customer.customer",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$h59RnLjS5NfHhVBQwQjYkG$DPC2XY9e5N43P1Wow9CqQ+D4GyPSSNBZ/hqNOGh09/A=",
+      "last_login": "2022-07-06T05:09:13.509Z",
+      "is_superuser": true,
+      "first_name": "",
+      "last_name": "",
+      "email": "admin@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-07-06T05:08:37.696Z",
+      "username": "admin",
+      "birth_date": null,
+      "gender": "female",
+      "address": "",
+      "phone_number": "",
+      "age": null,
+      "manager": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$z3vuoyMl7k4FikSYBQu4KP$shlMLQa3LkhKEhyALYmTfcFOGlg5lm8z1nEYZ+dgGVg=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "email": "narendramodi@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2022-07-15T04:56:28.638Z",
+      "username": "narendra",
+      "birth_date": null,
+      "gender": "female",
+      "address": "",
+      "phone_number": "",
+      "age": null,
+      "manager": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 19,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$M1K0R672n4N2tygacSmkZf$Tr7Iay/yvo+K28ZDvp4U0I737NL7WHBtqz1lriw2hB0=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "yo",
+      "last_name": "aadityanath",
+      "email": "yogi@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "1992-04-21T00:00:00Z",
+      "username": "yogi",
+      "birth_date": "1979-03-18",
+      "gender": "male",
+      "address": "UttarPradesh",
+      "phone_number": "1234567891",
+      "age": 45,
+      "manager": 1,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

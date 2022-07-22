@@ -9,15 +9,16 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import logging.config
 import os
 from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-from django.utils.translation import gettext
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGGING_CONFIG = None
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -132,7 +133,19 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+}
 REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES': [
@@ -168,16 +181,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'ecom_db',
-#         'USER': 'admin',
-#         'PASSWORD': 'my_db@123',
+#         'NAME': 'project_database',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
 #         'HOST': 'localhost',
-#         'PORT': '5432',
+#         'PORT': ''
 #     }
 # }
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Your Project API',
     'DESCRIPTION': 'Your project description',
@@ -185,16 +200,7 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
 }
-# DATABASE = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.posgresql_psycopg',
-#         'NAME': 'e-commerce',
-#         'USER': 'postgres',
-#         'PASSWORD': 'admin',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
     'SECURITY_DEFINITIONS': {
